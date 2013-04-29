@@ -1,0 +1,10 @@
+@media (min-width: 800px) {
+
+  a:local-link {
+    color: red;
+    font-weight: bold;
+    text-decoration: line-through;
+
+  }
+
+}

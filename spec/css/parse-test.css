@@ -1,0 +1,87 @@
+@charset "UTF-8";
+
+@namespace "http://www.w3.org/1999/xhtml";
+@namespace svg "http://www.w3.org/2000/svg";
+
+/* comments tests
+.box {
+  display: flex;
+}
+*/
+
+/* multiple selectors per rule */
+h1, h2, h3, h4 {
+  font-weight: bold;
+}
+
+.foo {
+  /* Data URI that contains characters like `:` and `;` */
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAZCAYA);
+  /* nested functions */
+  width: calc(2em + calc(5px + 2%));
+  /* missing final semicolon */
+  box-shadow: 0 0 10px rgba(0,0,0,0.1)
+}
+
+/* @media tests */
+@media screen and (min-width: 600px) and (max-width: 1000px) {
+  p {
+    color: gray;
+    font-size: 2em;
+  }
+  /* nested @media blocks */
+  @media (max-width: 1000px) {
+    .foo {
+      box-sizing: border-box;
+    }
+    @media (max-width: 1000px) {
+      .fizz {
+        visibility: hidden;
+      }
+      .buzz {
+        text-decoration: underline;
+      }
+    }
+    .bar {
+      clear: both;
+    }
+  }
+}
+
+/* animation and keyframes tests */
+.animate {
+  animation: foobar 2s ease-in-out 0s infinite alternate;
+}
+@keyframes foobar {
+  0% {
+    top: 0;
+    left: 0;
+  }
+  50% {
+    top: 50%;
+    left: 100%;
+  }
+  100% {
+    top: 100%;
+    left: 0;
+  }
+}
+
+/* @supports tests */
+@supports (display: flex) {
+  .flexie {
+    display: flex;
+  }
+}
+
+/* @page tests */
+@page {
+  margin: 10%;
+  counter-increment: page;
+  @top-center {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+    content: counter(page);
+  }
+}

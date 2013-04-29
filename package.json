@@ -1,0 +1,19 @@
+{
+  "name": "polyfill",
+  "title": "Polyfill.js",
+  "author": {
+    "name": "Philip Walton",
+    "url": "http://philipwalton.com"
+  },
+  "version": "0.1.0",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-nodeunit": "~0.1.2"
+  }
+}

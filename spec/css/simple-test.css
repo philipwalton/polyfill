@@ -1,0 +1,18 @@
+.selector {
+  foo: bar;
+}
+
+@media (min-width: 40em) { /* 640px */
+  .selector {
+    bar: foo;
+  }
+  .declaration {
+    prop: one;
+  }
+}
+
+@media (max-width: 30em) { /* 480px */
+  .declaration {
+    prop: two;
+  }
+}

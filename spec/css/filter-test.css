@@ -1,0 +1,21 @@
+p:nth-of-type(2n-1), pre:last-child, code {
+  color: red;
+}
+
+.flex {
+  display: -webkit-flex;
+  foo: bar;
+}
+
+@media (min-width: 40em) {
+  .flex {
+    -webkit-flex: 0 0 auto;
+  }
+
+  @media (max-width: 1000px) {
+    .nested {
+      float: left;
+    }
+
+  }
+}

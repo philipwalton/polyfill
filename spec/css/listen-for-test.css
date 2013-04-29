@@ -1,0 +1,24 @@
+.selector {
+  foo: bar;
+}
+
+@media (min-width: 40em) {
+  .declaration {
+    prop: value;
+  }
+}
+
+@media (max-width: 1000px) {
+  .declaration {
+    prop: value;
+  }
+
+  @media (min-width: 500px) {
+    .nested-declaration1 {
+      prop: value;
+    }
+    .nested-declaration2 {
+      prop: second-value;
+    }
+  }
+}

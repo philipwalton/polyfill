@@ -1,0 +1,29 @@
+.one {
+  foo: one;
+}
+
+@media (min-width: 400px) {
+  .two {
+    foo: two;
+  }
+}
+
+@media (max-width: 400px) {
+  .three {
+    bar: three;
+  }
+}
+
+@media (min-width: 200px) {
+  @media (max-width: 600px) {
+    .four {
+      bar: four;
+    }
+  }
+}
+
+@media (min-width: 300px) and (max-width: 500px) {
+  .five {
+    fizz: buzz;
+  }
+}

@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <title>Polyfill Spec Runner iFrame</title>
+
+  <link id="jasmine-css" rel="stylesheet" type="text/css" href="/lib/jasmine/jasmine.css">
+  <link id="exclude-test1" rel="stylesheet" type="text/css" href="/spec/css/exclude-test1.css">
+  <link id="exclude-test2" rel="stylesheet" type="text/css" href="/spec/css/exclude-test2.css">
+  <link id="include-test1" rel="stylesheet" type="text/css" href="/spec/css/include-test1.css">
+  <link id="include-test2" rel="stylesheet" type="text/css" href="/spec/css/include-test2.css">
+  <link id="parse-test" rel="stylesheet" type="text/css" href="/spec/css/parse-test.css">
+  <link id="filter-test" rel="stylesheet" type="text/css" href="/spec/css/filter-test.css">
+  <link id="simple-test" rel="stylesheet" type="text/css" href="/spec/css/simple-test.css">
+  <link id="complex-test" rel="stylesheet" type="text/css" href="/spec/css/complex-test.css">
+
+  <style>
+    body { overflow: auto; }
+  </style>
+
+  <script src="/lib/jasmine/jasmine.js"></script>
+  <script src="/lib/jasmine/jasmine-html.js"></script>
+  <script src="/lib/lodash.js"></script>
+
+  <!-- include source files here... -->
+  <script src="/dist/polyfill.js"></script>
+
+  <!-- include spec files here... -->
+  <script src="/spec/javascript/modules/download-manager-spec.js"></script>
+  <script src="/spec/javascript/modules/style-manager-spec.js"></script>
+  <script src="/spec/javascript/constructors/rule-spec.js"></script>
+  <script src="/spec/javascript/constructors/ruleset-spec.js"></script>
+  <script src="/spec/javascript/constructors/polyfill-spec.js"></script>
+
+  <script>
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+
+      var htmlReporter = new jasmine.HtmlReporter();
+
+      jasmineEnv.addReporter(htmlReporter);
+
+      jasmineEnv.specFilter = function(spec) {
+        return htmlReporter.specFilter(spec);
+      };
+
+      var currentWindowOnload = window.onload;
+
+      window.onload = function() {
+        if (currentWindowOnload) {
+          currentWindowOnload();
+        }
+        execJasmine();
+      };
+
+      function execJasmine() {
+        jasmineEnv.execute();
+      }
+
+    })();
+  </script>
+
+</head>
+
+<body>
+</body>
+</html>

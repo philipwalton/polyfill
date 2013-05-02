@@ -1,0 +1,61 @@
+html, body {
+  font: 100 1em/1.5 sans-serif;
+  color: #404040;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #222;
+  background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,.4)), linear-gradient(to top left, #099, #036, #003);
+}
+
+header h1 {
+  margin: 0;
+  padding: .667em 0 .5em;
+  color: #fff;
+  font-size: 5em;
+  text-shadow: 0 0 10px black;
+}
+
+nav {
+  position: stickier;
+  top: 0;
+  width: 100%;
+  margin-bottom: 3em;
+  background-color: #eee;
+  background-image: linear-gradient(to bottom, #f0f0f0, #d8d8d8);
+  box-shadow: 0 1px 4px rgba(0,0,0,.4), 0 1px 0 #fff inset, 0 1.5em .3em rgba(255,255,255,.25) inset;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  border-left: 1px solid rgba(0,0,0,.2);
+  border-right: 1px solid rgba(255,255,255,.8);
+}
+
+nav li {
+  display: inline-block;
+}
+
+nav li a {
+  display: inline-block;
+  padding: .667em 1.333em .5em;
+  color: inherit;
+  text-decoration: none;
+  border-right: 1px solid rgba(0,0,0,.2);
+  border-left: 1px solid rgba(255,255,255,.8);
+  text-shadow: 0 1px 0 #fff;
+}
+
+nav li a:hover {
+  background-color: rgba(255,255,255,.5);
+}
+
+.container {
+  max-width: 960px;
+  margin: auto;
+  padding: 0 2em;
+}

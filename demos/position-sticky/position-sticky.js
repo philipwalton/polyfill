@@ -9,7 +9,9 @@
         , top = rule.getDeclaration().top
         , $clone
 
+
       function onScroll(e) {
+
         if ($(window).scrollTop() >= offset) {
           if (!$clone) {
             $clone = $el.clone().css({position: "fixed", top: top}).appendTo("body")
@@ -23,14 +25,10 @@
       }
 
       onScroll()
-      $(document).on("scroll", onScroll);
+      $(window).on("scroll", onScroll);
 
 
     })
-
-
-
-
 
   })
 

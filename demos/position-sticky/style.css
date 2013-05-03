@@ -1,10 +1,3 @@
-html, body {
-  font: 100 1em/1.5 sans-serif;
-  color: #404040;
-  margin: 0;
-  padding: 0;
-}
-
 .header {
   background-color: #002850;
   background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,.4)), linear-gradient(to top left, #099, #036, #003);
@@ -12,16 +5,16 @@ html, body {
 
 .header h1 {
   margin: 0;
-  padding: .667em 0 .5em;
+  padding: .75em 0 .5em;
   color: #fff;
   font-size: 5em;
+  line-height: 1.1;
   text-shadow: 0 0 10px black;
 }
 
 .nav {
-  position: stickier;
+  position: sticky;
   top: 0;
-  width: 100%;
   overflow: hidden;
   margin-bottom: 3em;
   background-color: #f0f0f0;
@@ -30,10 +23,7 @@ html, body {
 }
 
 .nav ul {
-  margin: 0;
-  padding: 0;
   float: left;
-  list-style: none;
   border-right: 1px solid #f8f8f8;
   border-left: 1px solid #b8b8b8;
   border-right: 1px solid rgba(255,255,255,.8);
@@ -66,4 +56,16 @@ html, body {
   max-width: 960px;
   margin: auto;
   padding: 0 2em;
+}
+
+@media (min-width: 40em) {
+  .sidebar {
+    position: sticky;
+    top: 85px;
+    float: right;
+    width: 8em;
+  }
+  .content {
+    margin-right: 14em;
+  }
 }

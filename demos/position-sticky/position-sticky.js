@@ -4,17 +4,22 @@
    * Feature detect position sticky, if it exists then do nothing
    */
   if ((function(d) {
-    d.style.position = "sticky"
+    try {
+      // some browsers will throw an error when assigning an
+      // unsupported value to a property
+      d.style.position = "sticky"
+    } catch (e) {
+      return false
+    }
     // this will return false if the browser doesn't recognize
     // "sticky" as a valid position value
     return d.style.position === "sticky"
   }(document.createElement("div")))) return
 
 
-  console.log("Creating Polyfill")
-
-
-  // a unique id used to safely remove event callbacks
+  /**
+   * A unique id used to safely remove event callbacks
+   */
   var uniqueID = 0
 
   /**
@@ -24,6 +29,7 @@
    */
   function onscroll($el) {
     var data = $el.data("position:sticky")
+    if (!data) return
     if ($(window).scrollTop() >= data.offsetTop - data.top) {
       if (!data.$clone) {
         data.$clone = $el.clone().css({position: "fixed", top: data.top}).appendTo("body")
@@ -57,10 +63,8 @@
     }
   }
 
-
-  Polyfill({declarations:["position:sticky"]}).then(function(matched, unmatched) {
-
-    matched.each(function(rule) {
+  function doMatched(rules) {
+    rules.each(function(rule) {
       var $elements = $(rule.getSelectors())
         , declaration = rule.getDeclaration()
       $elements.each(function() {
@@ -79,8 +83,10 @@
         $(window).on("resize.position:sticky:" + data.id, function() { onresize($this) })
       })
     })
+  }
 
-    unmatched.each(function(rule) {
+  function undoUnmatched(rules) {
+    rules.each(function(rule) {
       var $elements = $(rule.getSelectors())
       $elements.each(function() {
         var $this = $(this)
@@ -95,7 +101,12 @@
         }
       })
     })
+  }
 
+
+  Polyfill({declarations:["position:sticky"]}).then(function(matched, unmatched) {
+    doMatched(matched)
+    undoUnmatched(unmatched)
   })
 
 }(jQuery))

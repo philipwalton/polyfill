@@ -8,7 +8,6 @@ function Polyfill(keywords, options, callback) {
   // set the options
   this._keywords = keywords
   this._options = options || {}
-  this._callback = callback
   this._promise = []
 
   // then do the stuff
@@ -18,18 +17,25 @@ function Polyfill(keywords, options, callback) {
   this._filterCSSByKeywords()
   this._buildMediaQueryMap()
   this._reportInitialMatches()
-  this._reportMatchesOnMediaChanges()
+  this._addMediaListeners()
 }
 
 
 /**
- * An alternate (sugar) way of specifying the callback
+ * Fired when the media change and new rules match
  */
-Polyfill.prototype.then = function(callback) {
-  this._callback = callback
+Polyfill.prototype.doMatched = function(fn) {
+  this._doMatched = fn
+  this._resolve()
+  return this
+}
 
-  // in the event that _callback wasn't set right away,
-  // invoke any deferred functions
+
+/**
+ * Fired when the media changes and previously matching rules no longer match
+ */
+Polyfill.prototype.undoUnmatched = function(fn) {
+  this._undoUnmatched = fn
   this._resolve()
   return this
 }
@@ -61,13 +67,9 @@ Polyfill.prototype.getCurrentMatches = function() {
  * matches to the callback as unmatches
  */
 Polyfill.prototype.destroy = function() {
-  if (this._callback) {
-    this._callback(
-      new Ruleset([]),
-      this.getCurrentMatches()
-    )
+  if (this._undoUnmatched) {
+    this._undoUnmatched(this.getCurrentMatches())
     EventManager.removeListeners(this)
-    this._callback = null
   }
   return
 }
@@ -191,20 +193,22 @@ Polyfill.prototype._buildMediaQueryMap = function() {
 
 Polyfill.prototype._reportInitialMatches = function() {
   this._defer(
-    function() { return this._filteredRules && this._callback },
     function() {
-      this._callback(
-        this.getCurrentMatches(),
-        new Ruleset([]),
-        this
-      )
+      return this._filteredRules && this._doMatched
+    },
+    function() {
+      this._doMatched(this.getCurrentMatches())
     }
   )
 }
 
-Polyfill.prototype._reportMatchesOnMediaChanges = function() {
+Polyfill.prototype._addMediaListeners = function() {
   this._defer(
-    function() { return this._filteredRules && this._callback },
+    function() {
+      return this._filteredRules
+        && this._doMatched
+        && this._undoUnmatched
+    },
     function() {
       EventManager.addListeners(
         this,
@@ -212,15 +216,15 @@ Polyfill.prototype._reportMatchesOnMediaChanges = function() {
           var i = 0
             , rule
             , matches = []
-            , nonmatches = []
+            , unmatches = []
           while (rule = this._filteredRules[i++]) {
             if (rule.media && rule.media.join(" and ") == query) {
-              (isMatch ? matches : nonmatches).push(rule)
+              (isMatch ? matches : unmatches).push(rule)
             }
           }
-          this._callback(new Ruleset(matches), new Ruleset(nonmatches), this)
-        },
-        this
+          matches.length && this._doMatched(new Ruleset(matches))
+          unmatches.length && this._undoUnmatched(new Ruleset(unmatches))
+        }
       )
     }
   )

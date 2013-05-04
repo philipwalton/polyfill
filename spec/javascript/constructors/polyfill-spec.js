@@ -1,27 +1,38 @@
 describe("Polyfill", function() {
 
   var iframe = window.top.document.getElementById("test-frame")
-    , results = []
-    , callCount = 0
     , polyfill
     , keywords = {selectors: [".selector"], declarations: ["prop:*"]}
     , options = {include: ["simple-test"]}
+    , matchedCount = 0
+    , unmatchedCount = 0
+    , matchedResults = []
+    , unmatchedResults = []
 
   // ignore these tests if we're not in an iframe
   if (!iframe) return
 
-  function callback(matched, unmatched, polyfill) {
-    callCount++
-    results.push({
-      matchedRules: matched,
-      unmatchedRules: unmatched,
-      polyfill: polyfill
+  function doMatched(matched) {
+    matchedCount++
+    matchedResults.push({
+      matched: matched,
+      polyfill: this
+    })
+  }
+
+  function undoUnmatched(unmatched) {
+    unmatchedCount++
+    unmatchedResults.push({
+      unmatched: unmatched,
+      polyfill: this
     })
   }
 
   function reset() {
-    callCount = 0
-    results = []
+    matchedCount = 0
+    unmatchedCount = 0
+    matchedResults = []
+    unmatchedResults = []
   }
 
   function setFrame(size, timeoutAmount) {
@@ -39,8 +50,10 @@ describe("Polyfill", function() {
       k || (k = keywords)
       o || (o = options)
       reset()
-      polyfill = Polyfill(k, o, callback)
-      waitsFor(function() { return callCount > 0 })
+      polyfill = Polyfill(k, o)
+        .doMatched(doMatched)
+        .undoUnmatched(undoUnmatched)
+      waitsFor(function() { return matchedCount > 0 })
     })
   }
 
@@ -128,8 +141,10 @@ describe("Polyfill", function() {
 
       setFrame(200)
       runs(function() {
-        polyfill = Polyfill(keywords, options, callback)
-        waitsFor(function() { return callCount > 0 })
+        polyfill = Polyfill(keywords, options)
+          .doMatched(doMatched)
+          .undoUnmatched(undoUnmatched)
+        waitsFor(function() { return matchedCount > 0 })
       })
       setFrame(800)
       runs(function() {
@@ -148,8 +163,10 @@ describe("Polyfill", function() {
 
     function createPolyfill() {
       runs(function() {
-        polyfill = Polyfill(keywords, options, callback)
-        waitsFor(function() { return callCount > 0 })
+        polyfill = Polyfill(keywords, options)
+          .doMatched(doMatched)
+          .undoUnmatched(undoUnmatched)
+        waitsFor(function() { return matchedCount > 0 })
       })
     }
 
@@ -161,7 +178,8 @@ describe("Polyfill", function() {
     it("can create a new Polyfill instance with all the correct properties", function() {
       createPolyfill()
       runs(function() {
-        expect(polyfill._callback).toBeDefined()
+        expect(polyfill._doMatched).toBeDefined()
+        expect(polyfill._undoUnmatched).toBeDefined()
         expect(polyfill._filteredRules).toBeDefined()
         expect(polyfill._keywords).toBeDefined()
         expect(polyfill._mediaQueryMap).toBeDefined()
@@ -177,9 +195,9 @@ describe("Polyfill", function() {
       setFrame(300)
       createPolyfill()
       runs(function() {
-        expect(callCount).toBe(1)
-        expect(results[0].matchedRules.size()).toBe(2)
-        expect(results[0].unmatchedRules.size()).toBe(0)
+        expect(matchedCount).toBe(1)
+        expect(unmatchedCount).toBe(0)
+        expect(matchedResults[0].matched.size()).toBe(2)
       })
     })
 
@@ -188,10 +206,10 @@ describe("Polyfill", function() {
       createPolyfill()
       setFrame(800)
       runs(function() {
-        expect(callCount).toBe(1)
-        expect(results[0].matchedRules.size()).toBe(2)
-        expect(results[0].matchedRules.at(0).getMedia()).toEqual("(min-width: 40em)")
-        expect(results[0].unmatchedRules.size()).toBe(0)
+        expect(matchedCount).toBe(1)
+        expect(unmatchedCount).toBe(0)
+        expect(matchedResults[0].matched.size()).toBe(2)
+        expect(matchedResults[0].matched.at(0).getMedia()).toEqual("(min-width: 40em)")
       })
     })
 
@@ -201,13 +219,12 @@ describe("Polyfill", function() {
       setFrame(800)
       setFrame(200)
       runs(function() {
-        expect(callCount).toBe(2)
-        expect(results[0].matchedRules.size()).toBe(0)
-        expect(results[0].unmatchedRules.size()).toBe(2)
-        expect(results[0].unmatchedRules.at(0).getMedia()).toEqual("(min-width: 40em)")
-        expect(results[1].matchedRules.size()).toBe(1)
-        expect(results[1].matchedRules.at(0).getMedia()).toEqual("(max-width: 30em)")
-        expect(results[1].unmatchedRules.size()).toBe(0)
+        expect(matchedCount).toBe(1)
+        expect(unmatchedCount).toBe(1)
+        expect(unmatchedResults[0].unmatched.size()).toBe(2)
+        expect(unmatchedResults[0].unmatched.at(0).getMedia()).toEqual("(min-width: 40em)")
+        expect(matchedResults[0].matched.size()).toBe(1)
+        expect(matchedResults[0].matched.at(0).getMedia()).toEqual("(max-width: 30em)")
       })
     })
 
@@ -216,7 +233,8 @@ describe("Polyfill", function() {
       createPolyfill()
       setFrame(550)
       runs(function() {
-        expect(callCount).toBe(0)
+        expect(matchedCount).toBe(0)
+        expect(unmatchedCount).toBe(0)
       })
     })
 
@@ -228,7 +246,8 @@ describe("Polyfill", function() {
       })
       setFrame(900)
       runs(function() {
-        expect(callCount).toBe(0)
+        expect(matchedCount).toBe(0)
+        expect(unmatchedCount).toBe(0)
       })
     })
 
@@ -246,10 +265,16 @@ describe("Polyfill", function() {
 
     function createPolyfills() {
       runs(function() {
-        polyfill1 = Polyfill(keywords1, options, callback)
-        polyfill2 = Polyfill(keywords2, options, callback)
-        polyfill3 = Polyfill(keywords3, options, callback)
-        waitsFor(function() { return callCount === 3 })
+        polyfill1 = Polyfill(keywords1, options)
+          .doMatched(doMatched)
+          .undoUnmatched(undoUnmatched)
+        polyfill2 = Polyfill(keywords2, options)
+          .doMatched(doMatched)
+          .undoUnmatched(undoUnmatched)
+        polyfill3 = Polyfill(keywords3, options)
+          .doMatched(doMatched)
+          .undoUnmatched(undoUnmatched)
+        waitsFor(function() { return matchedCount === 3 })
       })
     }
 
@@ -264,7 +289,8 @@ describe("Polyfill", function() {
       createPolyfills()
       runs(function() {
         // polyfill1
-        expect(polyfill1._callback).toBeDefined()
+        expect(polyfill1._doMatched).toBeDefined()
+        expect(polyfill1._undoUnmatched).toBeDefined()
         expect(polyfill1._filteredRules).toBeDefined()
         expect(polyfill1._keywords).toBeDefined()
         expect(polyfill1._mediaQueryMap).toBeDefined()
@@ -274,7 +300,8 @@ describe("Polyfill", function() {
         expect(polyfill1._stylesheetURLs).toBeDefined()
         expect(polyfill1._stylesheets).toBeDefined()
         // polyfill2
-        expect(polyfill2._callback).toBeDefined()
+        expect(polyfill2._doMatched).toBeDefined()
+        expect(polyfill2._undoUnmatched).toBeDefined()
         expect(polyfill2._filteredRules).toBeDefined()
         expect(polyfill2._keywords).toBeDefined()
         expect(polyfill2._mediaQueryMap).toBeDefined()
@@ -284,7 +311,8 @@ describe("Polyfill", function() {
         expect(polyfill2._stylesheetURLs).toBeDefined()
         expect(polyfill2._stylesheets).toBeDefined()
         // polyfill3
-        expect(polyfill3._callback).toBeDefined()
+        expect(polyfill3._doMatched).toBeDefined()
+        expect(polyfill3._undoUnmatched).toBeDefined()
         expect(polyfill3._filteredRules).toBeDefined()
         expect(polyfill3._keywords).toBeDefined()
         expect(polyfill3._mediaQueryMap).toBeDefined()
@@ -300,16 +328,17 @@ describe("Polyfill", function() {
       setFrame(700)
       createPolyfills()
       runs(function() {
-        expect(callCount).toBe(3)
+        expect(matchedCount).toBe(3)
+        expect(unmatchedCount).toBe(0)
         // polyfill1
-        expect(results[0].polyfill).toBe(polyfill1)
-        expect(results[0].matchedRules.size()).toBe(2)
+        expect(matchedResults[0].polyfill).toBe(polyfill1)
+        expect(matchedResults[0].matched.size()).toBe(2)
         // polyfill2
-        expect(results[1].polyfill).toBe(polyfill2)
-        expect(results[1].matchedRules.size()).toBe(0)
+        expect(matchedResults[1].polyfill).toBe(polyfill2)
+        expect(matchedResults[1].matched.size()).toBe(0)
         // polyfill3
-        expect(results[2].polyfill).toBe(polyfill3)
-        expect(results[2].matchedRules.size()).toBe(0)
+        expect(matchedResults[2].polyfill).toBe(polyfill3)
+        expect(matchedResults[2].matched.size()).toBe(0)
       })
     })
 
@@ -318,14 +347,14 @@ describe("Polyfill", function() {
       createPolyfills()
       setFrame(450)
       runs(function() {
-        expect(callCount).toBe(2)
+        expect(matchedCount).toBe(2)
+        expect(unmatchedCount).toBe(0)
         // polyfill2
-        expect(results[0].polyfill).toBe(polyfill2)
-        expect(results[0].matchedRules.size()).toBe(1)
-        console.log(results[0])
+        expect(matchedResults[0].polyfill).toBe(polyfill2)
+        expect(matchedResults[0].matched.size()).toBe(1)
         // polyfill3
-        expect(results[1].polyfill).toBe(polyfill3)
-        expect(results[1].matchedRules.size()).toBe(1)
+        expect(matchedResults[1].polyfill).toBe(polyfill3)
+        expect(matchedResults[1].matched.size()).toBe(1)
       })
     })
 
@@ -335,26 +364,23 @@ describe("Polyfill", function() {
       setFrame(450)
       setFrame(100)
       runs(function() {
-        expect(callCount).toBe(4)
+        expect(matchedCount).toBe(1)
+        expect(unmatchedCount).toBe(3)
         // polyfill1
-        expect(results[0].polyfill).toBe(polyfill1)
-        expect(results[0].matchedRules.size()).toBe(0)
-        expect(results[0].unmatchedRules.size()).toBe(1)
-        expect(results[0].unmatchedRules.at(0).getMedia()).toEqual("(min-width: 400px)")
+        expect(unmatchedResults[0].polyfill).toBe(polyfill1)
+        expect(unmatchedResults[0].unmatched.size()).toBe(1)
+        expect(unmatchedResults[0].unmatched.at(0).getMedia()).toEqual("(min-width: 400px)")
         // polyfill2
-        expect(results[1].polyfill).toBe(polyfill2)
-        expect(results[1].matchedRules.size()).toBe(1)
-        expect(results[1].matchedRules.at(0).getMedia()).toEqual("(max-width: 400px)")
-        expect(results[1].unmatchedRules.size()).toBe(0)
-        expect(results[2].polyfill).toBe(polyfill2)
-        expect(results[2].matchedRules.size()).toBe(0)
-        expect(results[2].unmatchedRules.size()).toBe(1)
-        expect(results[2].unmatchedRules.at(0).getMedia()).toEqual("(min-width: 200px) and (max-width: 600px)")
+        expect(matchedResults[0].polyfill).toBe(polyfill2)
+        expect(matchedResults[0].matched.size()).toBe(1)
+        expect(matchedResults[0].matched.at(0).getMedia()).toEqual("(max-width: 400px)")
+        expect(unmatchedResults[1].polyfill).toBe(polyfill2)
+        expect(unmatchedResults[1].unmatched.size()).toBe(1)
+        expect(unmatchedResults[1].unmatched.at(0).getMedia()).toEqual("(min-width: 200px) and (max-width: 600px)")
         // polyfill3
-        expect(results[3].polyfill).toBe(polyfill3)
-        expect(results[3].matchedRules.size()).toBe(0)
-        expect(results[3].unmatchedRules.size()).toBe(1)
-        expect(results[3].unmatchedRules.at(0).getMedia()).toEqual("(min-width: 300px) and (max-width: 500px)")
+        expect(unmatchedResults[2].polyfill).toBe(polyfill3)
+        expect(unmatchedResults[2].unmatched.size()).toBe(1)
+        expect(unmatchedResults[2].unmatched.at(0).getMedia()).toEqual("(min-width: 300px) and (max-width: 500px)")
       })
     })
 
@@ -363,7 +389,8 @@ describe("Polyfill", function() {
       createPolyfills()
       setFrame(475)
       runs(function() {
-        expect(callCount).toBe(0)
+        expect(matchedCount).toBe(0)
+        expect(unmatchedCount).toBe(0)
       })
     })
 
@@ -377,7 +404,8 @@ describe("Polyfill", function() {
       })
       setFrame(100)
       runs(function() {
-        expect(callCount).toBe(0)
+        expect(matchedCount).toBe(0)
+        expect(unmatchedCount).toBe(0)
       })
     })
 

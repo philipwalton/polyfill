@@ -11,19 +11,16 @@
     }
   })
 
-  Polyfill({selectors:[":local-link"]}).then(function(matched, unmatched) {
-
-    var $matches
-
-    matched.each(function(rule) {
-      $matches = $(rule.getSelectors())
-      $matches.css(rule.getDeclaration())
+  Polyfill({selectors:[":local-link"]})
+    .doMatched(function(rules) {
+      rules.each(function(rule) {
+        $(rule.getSelectors()).css(rule.getDeclaration())
+      })
     })
-
-    unmatched.each(function(rule) {
-      $(rule.getSelectors()).removeAttr("style")
+    .undoUnmatched(function(rules) {
+      rules.each(function(rule) {
+        $(rule.getSelectors()).removeAttr("style")
+      })
     })
-
-  })
 
 }(jQuery))

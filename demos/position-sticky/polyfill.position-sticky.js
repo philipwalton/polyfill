@@ -22,6 +22,7 @@
    */
   var uniqueID = 0
 
+
   /**
    * Scroll event callback
    * Based on the scroll position toggle the element between
@@ -45,6 +46,7 @@
       }
     }
   }
+
 
   /**
    * Resize event callback
@@ -103,10 +105,8 @@
     })
   }
 
-
-  Polyfill({declarations:["position:sticky"]}).then(function(matched, unmatched) {
-    doMatched(matched)
-    undoUnmatched(unmatched)
-  })
+  Polyfill({declarations:["position:sticky"]})
+    .doMatched(doMatched)
+    .undoUnmatched(undoUnmatched)
 
 }(jQuery))

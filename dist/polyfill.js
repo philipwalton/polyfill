@@ -139,7 +139,7 @@ var DownloadManager = (function() {
       , url
       , i = 0
     while (url = urls[i++]) {
-      stylesheets.push({url: url, css: cache[url]})
+      stylesheets.push(cache[url])
     }
     callback.call(null, stylesheets)
   }
@@ -984,7 +984,7 @@ function Polyfill(keywords, options, callback) {
   this._promise = []
 
   // then do the stuff
-  this._getStylesheetURLs()
+  this._getStylesheets()
   this._downloadStylesheets()
   this._parseStylesheets()
   this._filterCSSByKeywords()
@@ -1079,37 +1079,47 @@ Polyfill.prototype._resolve = function() {
  * Get a list of <link> tags in the head
  * optionally filter by the include/exclude options
  */
-Polyfill.prototype._getStylesheetURLs = function() {
+Polyfill.prototype._getStylesheets = function() {
   var i = 0
     , id
     , ids
     , link
-    , links = []
-    , allLinks
+    , links
+    , stylesheet
+    , stylesheets = []
+
   if (this._options.include) {
     // get only the included stylesheets link tags
     ids = this._options.include
     while (id = ids[i++]) {
-      if (link = document.getElementById(id)) links.push(link.href)
-    }
-    return this._stylesheetURLs = links
-  }
-  else {
-    // otherwise get all the stylesheets links tags
-    // except the explicitely exluded ones
-    ids = this._options.exclude
-    allLinks = document.getElementsByTagName( "link" )
-    while (link = allLinks[i++]) {
-      if (
-        link.rel
-        && (link.rel.toLowerCase() === "stylesheet")
-        && (!inArray(link.id, ids))
-      ) {
-        links.push(link.href)
+      if (link = document.getElementById(id)) {
+        // ignore print stylesheets
+        if (link.media && link.media == "print") continue
+        stylesheet = { href: link.href }
+        link.media && (stylesheet.media = link.media)
+        stylesheets.push(stylesheet)
       }
     }
-    return this._stylesheetURLs = links
   }
+  else {
+    // otherwise get all the stylesheets stylesheets tags
+    // except the explicitely exluded ones
+    ids = this._options.exclude
+    links = document.getElementsByTagName( "link" )
+    while (link = links[i++]) {
+      if (
+        link.rel
+        && (link.rel == "stylesheet")
+        && (link.media != "print") // ignore print stylesheets
+        && (!inArray(link.id, ids))
+      ) {
+        stylesheet = { href: link.href }
+        link.media && (stylesheet.media = link.media)
+        stylesheets.push(stylesheet)
+      }
+    }
+  }
+  return this._stylesheets = stylesheets
 }
 
 
@@ -1118,20 +1128,33 @@ Polyfill.prototype._getStylesheetURLs = function() {
  */
 Polyfill.prototype._downloadStylesheets = function() {
   var self = this
-  DownloadManager.request(this._stylesheetURLs, function(stylesheets) {
-    self._stylesheets = stylesheets
+    , stylesheet
+    , urls = []
+    , i = 0
+  while (stylesheet = this._stylesheets[i++]) {
+    urls.push(stylesheet.href)
+  }
+  DownloadManager.request(urls, function(stylesheets) {
+    var stylesheet
+      , i = 0
+    while (stylesheet = stylesheets[i]) {
+      self._stylesheets[i++].text = stylesheet
+    }
     self._resolve()
   })
 }
 
 Polyfill.prototype._parseStylesheets = function() {
   this._defer(
-    function() { return this._stylesheets },
+    function() {
+      return this._stylesheets
+        && this._stylesheets.length
+        && this._stylesheets[0].text },
     function() {
       var i = 0
         , stylesheet
       while (stylesheet = this._stylesheets[i++]) {
-        this._parsedCSS = (this._parsedCSS || []).concat(StyleManager.parse(stylesheet.css, stylesheet.url))
+        stylesheet.rules = StyleManager.parse(stylesheet.text, stylesheet.url)
       }
     }
   )
@@ -1139,9 +1162,29 @@ Polyfill.prototype._parseStylesheets = function() {
 
 Polyfill.prototype._filterCSSByKeywords = function() {
   this._defer(
-    function() { return this._parsedCSS },
     function() {
-      this._filteredRules = StyleManager.filter( this._parsedCSS, this._keywords )
+      return this._stylesheets
+        && this._stylesheets.length
+        && this._stylesheets[0].rules
+    },
+    function() {
+      var stylesheet
+        , media
+        , rules = []
+        , i = 0
+      while (stylesheet = this._stylesheets[i++]) {
+        media = stylesheet.media
+        // Treat stylesheets with a media attribute as being contained inside
+        // a single @media block, but ignore `all` and `screen` media values
+        // since they're basically meaningless in this context
+        if (media && media != "all" && media != "screen") {
+          rules.push({rules: stylesheet.rules, media: stylesheet.media})
+        } else {
+          rules = rules.concat(stylesheet.rules)
+        }
+      }
+      this._filteredRules = StyleManager.filter(rules, this._keywords)
+      console.log(this._filteredRules)
     }
   )
 }

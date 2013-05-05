@@ -24,10 +24,10 @@ describe("DownloadManager", function() {
       waitsFor(function() { return stylesheets })
 
       runs(function() {
-        expect(stylesheets[0].css).toContain("#exclude1")
-        expect(stylesheets[1].css).toContain("#exclude2")
-        expect(stylesheets[2].css).toContain("#include1")
-        expect(stylesheets[3].css).toContain("#include2")
+        expect(stylesheets[0]).toContain("#exclude1")
+        expect(stylesheets[1]).toContain("#exclude2")
+        expect(stylesheets[2]).toContain("#include1")
+        expect(stylesheets[3]).toContain("#include2")
       })
     })
 
@@ -58,7 +58,7 @@ describe("DownloadManager", function() {
       })
 
       runs(function() {
-        expect(cachedResult[0].css).toContain("#exclude1")
+        expect(cachedResult[0]).toContain("#exclude1")
         expect(DownloadManager._getRequestCount()).toBe(startingRequestCount + 4)
       })
     })

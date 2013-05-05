@@ -91,7 +91,7 @@ var DownloadManager = (function() {
       , url
       , i = 0
     while (url = urls[i++]) {
-      stylesheets.push({url: url, css: cache[url]})
+      stylesheets.push(cache[url])
     }
     callback.call(null, stylesheets)
   }

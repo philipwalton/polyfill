@@ -1,4 +1,3 @@
-
 /**
  * The Rule constructor
  */

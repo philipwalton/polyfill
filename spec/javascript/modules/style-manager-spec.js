@@ -213,7 +213,7 @@ describe("StyleManager", function() {
       })
       waitsFor(function() { return stylesheet })
       runs(function() {
-        expect(StyleManager.parse(stylesheet.css)).toEqual(expected)
+        expect(StyleManager.parse(stylesheet)).toEqual(expected)
       })
     })
 
@@ -226,7 +226,7 @@ describe("StyleManager", function() {
     beforeEach(function() {
       var stylesheet
       DownloadManager.request(["/spec/css/filter-test.css"], function(result) {
-        parsedRules = StyleManager.parse(result[0].css)
+        parsedRules = StyleManager.parse(result[0])
       })
       waitsFor(function() { return parsedRules })
     })

@@ -102,14 +102,48 @@ describe("Polyfill", function() {
       })
     })
 
+    it("includes stylesheet media attributes in each filtered rule's media list", function() {
+      createPolyfill(
+        {declarations:["*:*"]},
+        {include: ["media-test"]}
+      )
+      runs(function() {
+        expect(polyfill._filteredRules.length).toBe(1)
+        expect(polyfill._filteredRules[0].media).toEqual(["max-width: 800px"])
+      })
+    })
+
+    it("ignores stylesheets with a `print` media attribute", function() {
+      createPolyfill(
+        {declarations:["*:*"]},
+        {include: ["media-test", "media-print-test"]}
+      )
+      runs(function() {
+        expect(polyfill._filteredRules.length).toBe(1)
+        expect(polyfill._filteredRules[0].selectors).toEqual(["#media"])
+      })
+    })
+
+    it("ignores `all` and `screen` media attributes", function() {
+      createPolyfill(
+        {declarations:["*:*"]},
+        {include: ["media-screen-test", "media-all-test"]}
+      )
+      runs(function() {
+        expect(polyfill._filteredRules.length).toBe(2)
+        expect(polyfill._filteredRules[0].media).not.toBeDefined()
+        expect(polyfill._filteredRules[1].media).not.toBeDefined()
+      })
+    })
+
   })
 
   describe("options:", function() {
 
-    it("defaults to downloading all stylesheets if no options are passed", function() {
+    it("defaults to downloading all stylesheets (expect print stylesheets) if no options are passed", function() {
       createPolyfill({declarations: ["prop:*"]}, {})
       runs(function() {
-        expect(polyfill._stylesheets.length).toBe(9)
+        expect(polyfill._stylesheets.length).toBe(12)
       })
     })
 
@@ -119,7 +153,7 @@ describe("Polyfill", function() {
         {exclude:["exclude-test1", "exclude-test2"]}
       )
       runs(function() {
-        expect(polyfill._stylesheets.length).toBe(7)
+        expect(polyfill._stylesheets.length).toBe(10)
       })
     })
 
@@ -178,16 +212,14 @@ describe("Polyfill", function() {
     it("can create a new Polyfill instance with all the correct properties", function() {
       createPolyfill()
       runs(function() {
+        expect(polyfill._keywords).toBeDefined()
+        expect(polyfill._options).toBeDefined()
+        expect(polyfill._stylesheets).toBeDefined()
+        expect(polyfill._filteredRules).toBeDefined()
+        expect(polyfill._mediaQueryMap).toBeDefined()
+        expect(polyfill._promise).toBeDefined()
         expect(polyfill._doMatched).toBeDefined()
         expect(polyfill._undoUnmatched).toBeDefined()
-        expect(polyfill._filteredRules).toBeDefined()
-        expect(polyfill._keywords).toBeDefined()
-        expect(polyfill._mediaQueryMap).toBeDefined()
-        expect(polyfill._options).toBeDefined()
-        expect(polyfill._parsedCSS).toBeDefined()
-        expect(polyfill._promise).toBeDefined()
-        expect(polyfill._stylesheetURLs).toBeDefined()
-        expect(polyfill._stylesheets).toBeDefined()
       })
     })
 
@@ -289,38 +321,32 @@ describe("Polyfill", function() {
       createPolyfills()
       runs(function() {
         // polyfill1
+        expect(polyfill1._keywords).toBeDefined()
+        expect(polyfill1._options).toBeDefined()
+        expect(polyfill1._stylesheets).toBeDefined()
+        expect(polyfill1._filteredRules).toBeDefined()
+        expect(polyfill1._mediaQueryMap).toBeDefined()
+        expect(polyfill1._promise).toBeDefined()
         expect(polyfill1._doMatched).toBeDefined()
         expect(polyfill1._undoUnmatched).toBeDefined()
-        expect(polyfill1._filteredRules).toBeDefined()
-        expect(polyfill1._keywords).toBeDefined()
-        expect(polyfill1._mediaQueryMap).toBeDefined()
-        expect(polyfill1._options).toBeDefined()
-        expect(polyfill1._parsedCSS).toBeDefined()
-        expect(polyfill1._promise).toBeDefined()
-        expect(polyfill1._stylesheetURLs).toBeDefined()
-        expect(polyfill1._stylesheets).toBeDefined()
         // polyfill2
+        expect(polyfill2._keywords).toBeDefined()
+        expect(polyfill2._options).toBeDefined()
+        expect(polyfill2._stylesheets).toBeDefined()
+        expect(polyfill2._filteredRules).toBeDefined()
+        expect(polyfill2._mediaQueryMap).toBeDefined()
+        expect(polyfill2._promise).toBeDefined()
         expect(polyfill2._doMatched).toBeDefined()
         expect(polyfill2._undoUnmatched).toBeDefined()
-        expect(polyfill2._filteredRules).toBeDefined()
-        expect(polyfill2._keywords).toBeDefined()
-        expect(polyfill2._mediaQueryMap).toBeDefined()
-        expect(polyfill2._options).toBeDefined()
-        expect(polyfill2._parsedCSS).toBeDefined()
-        expect(polyfill2._promise).toBeDefined()
-        expect(polyfill2._stylesheetURLs).toBeDefined()
-        expect(polyfill2._stylesheets).toBeDefined()
         // polyfill3
+        expect(polyfill3._keywords).toBeDefined()
+        expect(polyfill3._options).toBeDefined()
+        expect(polyfill3._stylesheets).toBeDefined()
+        expect(polyfill3._filteredRules).toBeDefined()
+        expect(polyfill3._mediaQueryMap).toBeDefined()
+        expect(polyfill3._promise).toBeDefined()
         expect(polyfill3._doMatched).toBeDefined()
         expect(polyfill3._undoUnmatched).toBeDefined()
-        expect(polyfill3._filteredRules).toBeDefined()
-        expect(polyfill3._keywords).toBeDefined()
-        expect(polyfill3._mediaQueryMap).toBeDefined()
-        expect(polyfill3._options).toBeDefined()
-        expect(polyfill3._parsedCSS).toBeDefined()
-        expect(polyfill3._promise).toBeDefined()
-        expect(polyfill3._stylesheetURLs).toBeDefined()
-        expect(polyfill3._stylesheets).toBeDefined()
       })
     })
 

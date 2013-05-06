@@ -4,63 +4,106 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Polyfill.js Demo &mdash; position: sticky</title>
-    <link type="text/css" href="/demos/css/reset.css" rel="stylesheet">
+    <!-- <link type="text/css" href="/demos/css/reset.css" rel="stylesheet"> -->
+    <link type="text/css" href="/demos/css/bootstrap.css" rel="stylesheet">
     <link type="text/css" href="style.css" rel="stylesheet">
   </head>
   <body>
 
+
+
     <div class="header">
-      <div class="container">
-        <h1>Position: Sticky</h1>
-      </div>
-    </div>
-    <div class="nav">
-      <div class="container">
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Follow</a></li>
-        </ul>
+      <div class="center">
+        <h1 class="header-title">Polyfill.js Demo<h1>
+        <h2 class="header-subtitle">Position: Sticky</h2>
       </div>
     </div>
 
-    <div class="container">
+    <div class="navbar navbar-inverse">
+      <div class="navbar-inner">
+        <div class="center">
+          <ul class="nav">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Follow</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="center">
 
       <div class="sidebar">
-        <h3>Note:</h3>
-        <p>The sidebar is <code>position: sticky</code>, but only when the window is wider than <code>40em</code>. When the window is smaller than that, the sidebar should appear in the normal flow above the main content area.</p>
+        <h4>Links</h4>
+        <ul>
+          <li><a href="http://github.com/">Demo Source</a></li>
+          <li><a href="#">Polyfill.js</a></li>
+        </ul>
+        <h4>More Info</h4>
+        <ul>
+          <li><a href="#">About `position:sticky`</a></li>
+          <li><a href="#">www-style discussion</a></li>
+        </ul>
+
       </div>
 
       <div class="content">
 
-        <h1>Scroll Down!</h1>
+        <h3>What It Is</h3>
 
-        <p>This demo illustrates a polyfill for the experimental position value <code>sticky</code>. At this point in time only Chrome Canary and Webkit Nightly implement position sticky natively, but with this polyfill you can use it in any browser.</p>
+        <p><code>position: sticky</code> is a newly proposed feature of CSS that allows you to conditionally position elements based on the user's scroll position. Elements that have a position value of <code>sticky</code> will remain in the normal flow until their <code>top</code>, <code>right</code>, <code>bottom</code>, or <code>left</code> value are less than or equal to the users scroll position in that direction. After that condition is met the element "sticks" in place, behaving very similar to <code>position: fixed</code>.</p>
 
+        <p>Paraphrasing from Edward O’Connor's original <a href="http://lists.w3.org/Archives/Public/www-style/2012Jun/0627.html">proposal</a> of this feature:
+        </p>
 
+        <blockquote>Many web sites have elements that alternate between being in-flow and having <code>position: fixed</code>, depending on the user's scroll position. This is often done for elements in a sidebar that the page author wants to be always visible as the user scrolls, but which slot into a space on the page when scrolled to the top. Good examples are <a href="https://news.google.com/">news.google.com</a> (the "Top Stories" sidebar) and yelp.com (<a href="http://www.yelp.com/search?find_desc=restaurants&amp;find_loc=San+Francisco%2C+CA&amp;ns=1">search results map</a>).</blockquote>
 
+        <p>For a more detailed look at <code>position: sticky</code>, this <a href="http://updates.html5rocks.com/2012/08/Stick-your-landings-position-sticky-lands-in-WebKit">HTML5Rocks</a> is very informative.</p>
 
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod pellentesque velit, sed porta odio convallis quis. Nullam sodales pulvinar lectus a consectetur. Vestibulum luctus faucibus feugiat. In lacus felis, elementum nec porta ac, mollis lobortis mi. Etiam ac urna vitae nulla pharetra semper. Proin convallis venenatis mi, eu lobortis nulla porta in. Ut purus odio, pulvinar vel ultricies sit amet, hendrerit eu nulla. Sed a orci vel nisl auctor viverra eget eget elit. Sed non odio enim.</p>
-        <p>Vivamus ipsum purus, eleifend vel hendrerit tempus, consequat ut tortor. Etiam non tortor id sem euismod aliquam. Morbi et dolor dolor, sed ultricies sapien. Curabitur lobortis volutpat orci in adipiscing. Fusce porttitor malesuada velit, id pulvinar lorem pretium quis. Praesent posuere suscipit luctus. Donec a nulla vitae risus mollis imperdiet. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas quis urna non orci lacinia tincidunt.</p>
-        <p>Nunc ut est vel nunc pharetra rhoncus. Sed eget massa lacus. Nam tristique aliquet dolor vitae fringilla. Nullam ullamcorper erat vitae ante viverra luctus. In ut massa enim, eget aliquam lacus. Sed ut nunc id nisl hendrerit ultricies. Sed id neque ac neque posuere porttitor. Nulla at pellentesque augue. Mauris adipiscing, eros at scelerisque bibendum, lorem justo sollicitudin ipsum, convallis cursus ligula erat sollicitudin lacus. Phasellus in magna sed augue consectetur commodo vel sed justo. Nam urna diam, tincidunt quis commodo ut, cursus at nisl. Sed tincidunt aliquam justo, accumsan commodo magna accumsan eget. Cras mollis commodo leo, sed consectetur velit ultrices eu. Proin purus sem, dapibus ac bibendum ac, sollicitudin eget augue.</p>
+        <h3>What to Look For</h3>
 
-        <h2>Sub Header One</h2>
+        <p class="alert alert-success">Scroll down to see the demo in action, and resize the window to see how it responds at different media values.</p>
 
-        <p>Vestibulum adipiscing semper fermentum. Suspendisse laoreet, metus sit amet adipiscing viverra, nunc purus laoreet lacus, id egestas ante est quis felis. Praesent mauris nibh, auctor nec dapibus ut, rutrum et sem. Ut commodo, dolor viverra eleifend eleifend, lorem nisi imperdiet nisl, quis tristique tortor metus quis ipsum. In ut justo ligula. Nulla interdum quam vel lorem tempus ac eleifend sem gravida. Quisque blandit nisi vitae velit laoreet in scelerisque mi dignissim. Maecenas accumsan, turpis consequat tincidunt ornare, urna sapien scelerisque nibh, vel molestie sapien tellus quis mi. Morbi vitae orci at mi lobortis ultricies nec nec tellus. Nullam iaculis placerat lectus ac lacinia. Integer non scelerisque mi. Nullam dapibus lorem eget enim vehicula blandit. Morbi molestie gravida mattis. Etiam in molestie urna. Quisque dictum aliquam neque, eu adipiscing leo lacinia et. Praesent sed arcu nec erat viverra tempus et in nunc.</p>
-        <p>In est turpis, ornare adipiscing sollicitudin sit amet, pharetra in ligula. Quisque quis felis eget odio placerat bibendum. Suspendisse potenti. Donec vel felis lacus. Vestibulum quis sem sem, ac egestas ligula. Donec at orci ac enim sagittis ultricies nec non velit. Nam posuere volutpat mi, viverra posuere nulla gravida nec. Aliquam imperdiet, ligula sed mattis condimentum, ipsum mauris malesuada nibh, id aliquam lectus sapien eu ligula. Cras justo sem, tristique eget suscipit sit amet, pulvinar ut lacus. Cras in erat nisi, vitae sollicitudin magna. Donec vitae sem odio, ut vestibulum libero.</p>
-        <p>Nam pretium egestas feugiat. Maecenas nec mi id neque aliquet volutpat at egestas lorem. Phasellus eget eros risus, vestibulum placerat lacus. Vivamus commodo elit at ligula sagittis in placerat est ultricies. Nullam at nibh odio, ac porttitor magna. Curabitur magna nulla, auctor ac consectetur vitae, aliquam tempor nunc. Aliquam vitae nibh nunc. Morbi nec porttitor turpis. Nam mollis lorem nec mauris elementum facilisis. Sed volutpat diam non dolor lobortis ac tincidunt nisi dictum. Morbi neque nibh, dictum vel fringilla ac, ultricies ut libero. Pellentesque molestie libero sed tellus gravida porttitor. Vivamus lectus tellus, rutrum varius facilisis vel, lobortis malesuada nisl.</p>
-        <p>Suspendisse potenti. Pellentesque placerat orci et dui condimentum et condimentum odio laoreet. Morbi eleifend suscipit dolor non semper. Ut tempus, magna sit amet laoreet egestas, sem mauris sagittis ipsum, sit amet vehicula nunc arcu ut eros. Suspendisse vitae tortor tellus. Maecenas sodales facilisis sem non porttitor. Integer lobortis tempor nulla id hendrerit. Aliquam eget sapien quam, ac molestie odio. Mauris suscipit, lectus vel vulputate rutrum, orci risus pulvinar mi, a volutpat ligula risus at erat. Donec convallis, massa quis lobortis mollis, ipsum sem pellentesque nibh, in dignissim nulla felis a lectus. Duis non est at arcu dapibus gravida a nec orci. Maecenas ac tempor turpis. Quisque ultrices magna sed urna feugiat interdum.</p>
+        <p>The top navigation has the following declaration in the CSS:</p>
 
-        <h2>Sub Header Two</h2>
+<pre><code>.navbar {
+  position: sticky;
+  top: 0;
+}</code></pre>
 
-        <p>Maecenas quis neque eu odio ornare congue at ut tellus. Aenean ac eros enim, eget laoreet est. Nulla vitae augue bibendum lectus tristique consequat quis id purus. Aliquam erat volutpat. Aliquam fringilla vulputate neque. Nullam feugiat, purus facilisis gravida rutrum, sem tortor dapibus purus, eget pharetra nunc arcu at quam. Sed at lorem dui, nec aliquam nisi.</p>
-        <p>Suspendisse non neque diam, sed semper nulla. Integer ac bibendum lectus. Etiam sed porttitor orci. Proin metus nisi, lobortis vel iaculis lobortis, consequat sit amet lorem. Integer pellentesque urna odio. Nunc in mauris in diam accumsan lacinia. Nullam a massa lectus. Sed cursus magna ac velit mattis varius. Sed pellentesque, velit at lobortis mollis, ipsum massa laoreet orci, sed feugiat ipsum elit ac leo. Sed lobortis risus id libero varius lobortis.</p>
-        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc et eros quam, dapibus scelerisque metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam dictum eros sed ante bibendum et aliquam ipsum convallis. Maecenas eleifend gravida iaculis. Etiam dictum consectetur urna id posuere. Mauris in orci enim, in hendrerit leo. Sed ullamcorper, mauris ac dictum molestie, erat eros aliquet urna, sed laoreet tortor risus vitae nisi. Donec molestie, metus quis fermentum vehicula, metus eros vulputate enim, nec bibendum lorem velit a nulla. Aliquam quis elit arcu, a tempor mauris. Cras at lorem non tortor pharetra consectetur.</p>
-        <p>Praesent egestas condimentum dictum. Donec gravida convallis lorem quis gravida. Maecenas aliquam vulputate luctus. Vivamus nec bibendum magna. Donec tincidunt tortor et diam dignissim id tincidunt lorem interdum. Sed sagittis nulla vel elit hendrerit ut porttitor dui eleifend. Suspendisse et enim nunc, euismod consequat magna. Morbi tristique rutrum nisi at pretium. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi sit amet porttitor purus. In gravida augue quis eros placerat suscipit. Donec molestie sem nec augue pellentesque sagittis. Praesent iaculis, mi at tristique porta, turpis leo consequat ante, quis porta sapien lacus vel ligula. Nam at augue lorem, non molestie diam. Maecenas bibendum tincidunt ante, vel fermentum orci tristique eu.</p>
-        <p>Suspendisse quis lectus in purus scelerisque vestibulum ac in sapien. Etiam nec vehicula tellus. Aliquam enim orci, vulputate in hendrerit nec, interdum imperdiet augue. Maecenas vehicula faucibus ultricies. Nam nec tortor diam. Praesent at lorem et libero auctor sollicitudin. Ut pharetra mi non erat vehicula eu aliquet lorem iaculis. Integer tempor lacus nec neque feugiat nec malesuada justo aliquam. Fusce nec urna sit amet lectus porttitor porta.</p>
+        <p>This means that the navigation should be in the normal flow up until the point when the user scrolls the page such that the navigation is zero pixels from the top. Once that point is reached, the navigation bar should "stick" in place until the user scrolls back in the opposite direction.</p>
 
-        <h2>Sub Header Three</h2>
+        <p>The sidebar's <code>position: sticky</code> declaration is in a media query and should only apply when the browser window is smaller than <code>40em</code>. Here is what that CSS looks like:</p>
 
+<pre><code>@media (min-width: 40em) {
+  .sidebar {
+    position: sticky;
+    top: 68px;
+    float: right;
+  }
+}</code></pre>
+
+        <p>When the window is wider than <code>40em</code> the sidebar should be floated to the right, and when the user has scrolled such that the sidebar is less than or equal to 68 pixels from the top of the page. It will stick in place.</p>
+
+        <p>If at any point the window becomes smaller than <code>40em</code>, even if the sidebar is currently in sticky mode, the entire declaration should be ignored and the sidebar should return to the normal flow.</p>
+
+        <p>The complete HTML, CSS, and JavaScript code is available in the <a href="#">demo folder of the Polyfill.js Github repository</a>.</p>
+
+        <h3>Limitations</h3>
+
+        <p>There is currently no W3c specification for the position value <code>sticky</code>, as such this polyfill is limited in scope. It is also primarily for demonstration purposes, and should not be considered ready for production code.</p>
+
+        <p>For example, only the <code>top</code> value is taken into consideration (not <code>right</code>, <code>bottom</code>, or <code>left</code>) and pixels are the only unit supported.</p>
+
+        <p>In addition, Chrome's implementation of <code>position: sticky</code> confines an element to within the bounds of its parent, which this polyfill does not attempt to do.</p>
+
+        <h3>Keep Scrolling...</h3>
+
+        <p>In order to see the scrolling in action, the page needs to be tall enough to scroll, do here's our old friend Lorem Ipsum</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et ligula lorem, eu dapibus nulla. Donec cursus interdum ipsum, sit amet cursus felis rhoncus eu. Duis sollicitudin dignissim sapien, ac placerat dolor rutrum vitae. In eu orci nunc, vitae feugiat neque. Fusce sed est vitae felis fringilla elementum. Aenean tortor justo, facilisis eu tempus non, hendrerit id nunc. Etiam blandit odio eget metus sollicitudin aliquam. Nam nunc sem, lacinia eget sollicitudin bibendum, suscipit vel arcu. Nullam in volutpat justo. Etiam non risus felis, vitae volutpat nisi. Morbi libero orci, porta vitae blandit quis, tristique ut risus. Aenean condimentum dictum dolor eu cursus.</p>
+        <p>Nulla sit amet odio leo, non vulputate massa. Aliquam et condimentum risus. Donec id enim nibh, vitae placerat dui. In hac habitasse platea dictumst. Vivamus ac nulla turpis, vitae aliquam dui. Sed malesuada commodo urna, vel ornare dolor mattis at. Mauris neque mi, fringilla nec sodales eu, accumsan sed purus.</p>
+        <p>Fusce ultrices, nisl accumsan pharetra scelerisque, tellus ante facilisis libero, varius dapibus lacus odio eu velit. Curabitur eu arcu vel neque vehicula eleifend aliquam a erat. In hac habitasse platea dictumst. Morbi elementum enim quis lorem suscipit sit amet aliquet tellus condimentum. In ullamcorper elit sit amet ipsum cursus in imperdiet arcu porttitor. Praesent eu est quam, a pretium ante. Duis et nulla tellus. Phasellus varius blandit eros sit amet porttitor. Etiam sodales, ligula eget porttitor commodo, quam metus tempus nisi, nec iaculis erat arcu eget leo. Maecenas augue eros, tempus ut iaculis at, rhoncus in tellus.</p>
+        <p>Phasellus dui justo, egestas non varius eu, fringilla a purus. Proin sodales tempus augue id posuere. Vivamus posuere facilisis sapien et pellentesque. Etiam quis facilisis urna. Nam vehicula justo vel mauris sagittis lacinia. Ut egestas metus nec risus suscipit id congue nisl elementum. Vivamus rutrum augue sit amet quam egestas vitae dictum nisi accumsan. Fusce ante dui, faucibus rutrum semper sit amet, varius et odio. Aenean auctor tortor non felis tristique bibendum. Quisque sem tortor, tempor sed posuere vel, vehicula a tortor. Praesent quam massa, vulputate sit amet accumsan eget, cursus ac neque. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse potenti.</p>
         <p>Nulla sit amet odio leo, non vulputate massa. Aliquam et condimentum risus. Donec id enim nibh, vitae placerat dui. In hac habitasse platea dictumst. Vivamus ac nulla turpis, vitae aliquam dui. Sed malesuada commodo urna, vel ornare dolor mattis at. Mauris neque mi, fringilla nec sodales eu, accumsan sed purus.</p>
         <p>Fusce ultrices, nisl accumsan pharetra scelerisque, tellus ante facilisis libero, varius dapibus lacus odio eu velit. Curabitur eu arcu vel neque vehicula eleifend aliquam a erat. In hac habitasse platea dictumst. Morbi elementum enim quis lorem suscipit sit amet aliquet tellus condimentum. In ullamcorper elit sit amet ipsum cursus in imperdiet arcu porttitor. Praesent eu est quam, a pretium ante. Duis et nulla tellus. Phasellus varius blandit eros sit amet porttitor. Etiam sodales, ligula eget porttitor commodo, quam metus tempus nisi, nec iaculis erat arcu eget leo. Maecenas augue eros, tempus ut iaculis at, rhoncus in tellus.</p>
         <p>Phasellus dui justo, egestas non varius eu, fringilla a purus. Proin sodales tempus augue id posuere. Vivamus posuere facilisis sapien et pellentesque. Etiam quis facilisis urna. Nam vehicula justo vel mauris sagittis lacinia. Ut egestas metus nec risus suscipit id congue nisl elementum. Vivamus rutrum augue sit amet quam egestas vitae dictum nisi accumsan. Fusce ante dui, faucibus rutrum semper sit amet, varius et odio. Aenean auctor tortor non felis tristique bibendum. Quisque sem tortor, tempor sed posuere vel, vehicula a tortor. Praesent quam massa, vulputate sit amet accumsan eget, cursus ac neque. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse potenti.</p>

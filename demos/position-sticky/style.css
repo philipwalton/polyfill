@@ -1,59 +1,39 @@
 .header {
-  background-color: #002850;
-  background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,.4)), linear-gradient(to top left, #099, #036, #003);
+  padding: 5em 0 3em;
+  background-color: hsl(0, 0%, 25%);
+  background-image: linear-gradient(to bottom right, hsl(180, 50%, 20%), hsl(210, 100%, 4%));
 }
 
-.header h1 {
+.header-title {
   margin: 0;
-  padding: .75em 0 .5em;
-  color: #fff;
+  color: white;
   font-size: 5em;
-  line-height: 1.1;
-  text-shadow: 0 0 10px black;
+  line-height: 1;
+  text-shadow: 0 0 10px #000;
+}
+.header-subtitle {
+  margin: 0;
+  color: #909090;
+  color: rgba(255,255,255,0.5);
+  font-size: 2em;
+  font-weight: 400;
 }
 
-.nav {
+.navbar {
   position: sticky;
   top: 0;
-  overflow: hidden;
-  margin-bottom: 3em;
-  background-color: #f0f0f0;
-  background-image: linear-gradient(to bottom, #f0f0f0, #d8d8d8);
-  box-shadow: 0 1px 4px rgba(0,0,0,.4), 0 1px 0 #fff inset, 0 1.5em .3em rgba(255,255,255,.25) inset;
+  margin-bottom: 2em;
 }
 
-.nav ul {
-  float: left;
-  border-right: 1px solid #f8f8f8;
-  border-left: 1px solid #b8b8b8;
-  border-right: 1px solid rgba(255,255,255,.8);
-  border-left: 1px solid rgba(0,0,0,.2);
+.navbar .navbar-inner {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  box-shadow: 0 0 5px rgba(0,0,0,.7);
 }
 
-.nav li {
-  float: left;
-}
-
-.nav li a {
-  float: left;
-  padding: .667em 1.333em .5em;
-  color: #404040;
-  font-weight: 400;
-  text-decoration: none;
-  border-right: 1px solid #b8b8b8;
-  border-left: 1px solid #f8f8f8;
-  border-right: 1px solid rgba(0,0,0,.2);
-  border-left: 1px solid rgba(255,255,255,.8);
-  text-shadow: 0 1px 0 #fff;
-}
-
-.nav li a:hover {
-  background-color: #f8f8f8;
-  background-color: rgba(255,255,255,.5);
-}
-
-.container {
-  max-width: 960px;
+.center {
+  max-width: 940px;
   margin: auto;
   padding: 0 2em;
 }
@@ -61,7 +41,7 @@
 @media (min-width: 40em) {
   .sidebar {
     position: sticky;
-    top: 85px;
+    top: 68px;
     float: right;
     width: 11em;
   }

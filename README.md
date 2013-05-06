@@ -12,7 +12,7 @@ Most CSS polyfills do a lot of the same things. And if you're using more than on
 * Listen for media changes and report new results
 * Listen for for DOM changes and automatically update
 
-If most polyfills needs to do all of these tasks, it makes sense to abstract this work into a separate library. Using a common library to handle all the grunt not only makes writing polyfills much easier, but it also means your users don't have to download and parse the same stylesheets several times for a single pageload, an unfortunate reality in the Web today.
+If most polyfills needs to do all of these tasks, it makes sense to abstract this work into a separate library. Using a common library to handle all the grunt work not only makes writing polyfills much easier, but it also means your users don't have to download and parse the same stylesheets several times for a single pageload, an unfortunate reality in the Web today.
 
 Polyfill.js does this abstraction for you.
 
@@ -88,7 +88,7 @@ Returns a string of the media query value. If the rule contains more than one me
 
 ## A Complete Example
 
-Putting it all together, this is all the code you'd need to write a fully-functioning polyfill for `local-link` using jQuery:
+Putting it all together, this is all the code you'd need to write a fully-functioning polyfill for `:local-link` using jQuery:
 
 ```
 var reURL = /^(?:(https?:)\/\/)?((?:[0-9a-z\.\-]+)(?::(?:\d+))?)/

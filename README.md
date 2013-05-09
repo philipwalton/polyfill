@@ -12,7 +12,9 @@ Most CSS polyfills do a lot of the same things. And if you're using more than on
 * Listen for media changes and report new results
 * Listen for for DOM changes and automatically update
 
-If most polyfills needs to do all of these tasks, it makes sense to abstract this work into a separate library. Using a common library to handle all the grunt work not only makes writing polyfills much easier, but it also means your users don't have to download and parse the same stylesheets several times for a single pageload, an unfortunate reality in the Web today.
+Clients shouldn't have to download and parse the same stylesheets over and over again, or add the same event handlers to the same media query listeners. It's a waste of resources and not fair to your users.
+
+If most polyfill libraries do the same tasks, why not abstract those common tasks into a single library that plugin authors can hook into.
 
 Polyfill.js does this abstraction for you.
 
@@ -28,67 +30,212 @@ var localLinkPolyfill = Polyfill({ selectors: [":local-link"] })
 
 Once you have your polyfill instance, you simply register two callback: `doMatched()` and `undoUnmatched()`. When the page first loads and the stylesheets have been downloaded, parsed, filtered, and matched, the `doMatched()` callback is invoked and is passed a list of CSS rules that contain the specified keywords and match the current media.
 
-If the media value changes (usually by resizing the browser window) and additional rules now match, the `doMatched()` callback will be invoked again each time passing in the newly matched rules.
+If the media values change (usually by resizing the browser window) and new rules match, the `doMatched()` callback will be invoked again each time passing in the newly matched rules.
 
-If the media value changes and a rule no longer matches, the `undoUnmatched()` callback is invoked and passed a list of rules that used to match but no longer do.
+If the media value changes and some rules no longer match, the `undoUnmatched()` callback is invoked and passed a list of rules that used to match but now don't.
+
+## Demos
+
+* [Local Link]("/demos/local-link"): a new CSS pseudo-class for anchor tags that link to URLs within the current domain
+* [Position Sticky]("/demos/position-sticky"): a new CSS position value to allow elements to stick in place only after a specified scroll position is met.
 
 ## API
 
-The only accessible in the global scope is the `Polyfill` constructor. It contains the following methods:
+### Polyfill(keywords, [options])
 
-### Polyfill
+Create a new polyfill object. *Note:* the `new` operator is optional.
 
-**Polyfill(keywords, options)**
+#### arguments
 
-Creates and returns a new Polyfill instance (the `new` keyword is optional).
+1. **keywords** {Object}: An object map containing an array of strings to match against CSS rules. The possible object keys are `declarations`, `selectors`, or `media`, and the values are an array or keywords. Keywords strings are literal matches, but you may also include an asterisk character which will match any number of characters (equivalent to the following Regex: `/.*/`).
+2. **options** {Object} _(optional)_: An object map containing an array of stylesheet IDs to include or exclude from the Polyfill. `include` and `exclude` cannot be used together. If both are passed, `include` is favored.
 
-**doMatched(callback)**
+#### returns
 
-Accepts a callback function that is invoked whenever new rules match the passed keywords. This happens as soon as the page is loaded as well as when media changes. When the callback is invoked it is passed a Ruleset object. *(See below for the Ruleset method details.)*
+{Polyfill} the new Polyfill instance
 
-**undoUnmatched(callback)**
+#### example
 
-Accepts a callback function that is invoked whenever previously matches rules no longer match. This could be because the media changed or the polyfill was destroyed. When the callback is invoked it is passed a Ruleset object. *(See below for the Ruleset method details.)*
+```js
+var p1 = Polyfill({
+  selectors: [":local-link", ":nth-of-type"],
+  declarations: ["*border-radius:*", "position:sticky", "display:*flex"]
+}, {
+  exclude: ["third-party-css"]
+})
 
-**getMatches()**
+var p2 = Polyfill({
+  declarations: ["display:*flex"]
+}, {
+  include: ["flexbox", "box"]
+})
+```
 
-Normally the callbacks are all you need, but occassionally you'll want to manually get a list of all rules that are current matches.
+### Polyfill#doMatched(callback)
 
-**destroy()**
+Register a callback to be invoked whenever new rules match the passed keywords. This happens as soon as the page is loaded as well as when media changes. The callback is invoked with a [Ruleset](#ruleset) object that contains all of the newly matched CSS rules.
+
+#### arguments
+
+1) **callback** {Function): the function called
+
+#### returns
+
+{Polyfill} the current [Polyfill](#polyfill) instance
+
+#### example
+
+```
+polyfill.doMatched(function(rules) {
+  // do somthing...
+})
+```
+
+### Polyfill#undoUnmatched(callback)
+
+Register a callback function to be invoked whenever previously matches rules no longer match. This could be because the media changed or the polyfill was destroyed.
+
+#### arguments
+
+1. **callback** {Function): A callback function. Each invocation is passed a [Ruleset](#ruleset) object which contains all of the newly matched CSS rules.
+
+#### returns
+
+{Polyfill} the current [Polyfill](#polyfill) instance
+
+#### example
+
+```js
+polyfill.undoUnmatched(function(rules) {
+  // do somthing...
+})
+````
+
+### Polyfill#getMatches()
+
+Fetch all the CSS rules that match the current media. Rules that are not in a media block always match.
+
+#### returns
+
+{Ruleset} a [Ruleset](#ruleset) object containing all of the currently matches rules.
+
+#### example
+
+```js
+var matches = pf.getMatches()
+```
+
+### Polyfill#destroy()
 
 Destroy the polyfill instance by removing any media listeners and invoking the undoMatched callback.
 
-### Ruleset
+#### returns
 
-**each(callback)**
+{undefined}
 
-Iterate through each rule in the ruleset. When the callback function is invoked it is passed an instance of a `Rule` object. *(See below for the `Rule` method details.)*
+#### example
 
-**at(index)**
+```js
+polyfill.destroy()
+```
 
-Returns the `Rule` instance at the specified index. *(See below for the `Rule` method details.)*
+### Ruleset#each(callback)
 
-**size()**
+Iterates over a Ruleset invoking a callback for each Rule object in the Ruleset. Callbacks are invoked with the Rule object as their only arguments.
 
-Returns the number of rules in the set.
+#### arguments
 
-### Rule
+1. **callback** {Function}: the function called per iteration
 
-**getSelectors()**
+#### returns
 
-Returns a string of the selector. If the rule has more than one selector they are join with a comma.
+{Ruleset} the current instance
 
-**getDeclaration()**
+#### example
 
-Returns an object map of the CSS declaration. (Note: since an object cannot have duplicate keys, duplicate CSS property values ignored. If you need to access duplicate CSS values, you can manually inspect the `Rule` instance for the raw data.)
+```js
+rules.each(function(rule) {
+  // do something...
+})
+```
 
-**getMedia()**
+### Ruleset#at(index)
 
-Returns a string of the media query value. If the rule contains more than one media query value (a nested rule) the media values are joined on `and`.
+Returns the `Rule` instance at the specified index.
+
+#### arguments
+
+1. **index** (Number): the index of the rule to return
+
+#### returns
+
+{Rule} the Rule object at the specified index.
+
+#### examples
+
+```js
+var rule = rules.at(0)
+```
+
+### Ruleset#size()
+
+Returns the number of rules in the Ruleset
+
+#### returns
+
+{Number}
+
+#### example
+
+```js
+var length = rules.size()
+```
+
+### Rule#getSelectors()
+
+Returns the full selector as a string. If the rule contains more than one selector they are join with a comma.
+
+#### returns
+
+{String} the full selector
+
+#### example
+
+```js
+var selector = rule.getSelectors()
+```
+
+### Rule#getDeclaration()
+
+Returns an object map of the CSS declaration. Note: since an object cannot have duplicate keys, duplicate CSS property values ignored. If you need to access duplicate CSS values, you can manually inspect the `Rule` instance for the raw data.
+
+#### returns
+
+{Object} the rule's declaration
+
+#### example
+
+```js
+var declaration = rule.getDeclaration()
+```
+
+### Rule#getMedia()
+
+Returns a string of the media query value. If the rule contains more than one media query value (e.g. a nested rule) the media values are joined on `and`.
+
+#### returns
+
+{String} the full media query
+
+#### example
+
+```js
+var media = rule.getMedia()
+```
 
 ## A Complete Example
 
-Putting it all together, this is all the code you'd need to write a fully-functioning polyfill for `:local-link` using jQuery:
+Putting it all together, this is all the code you'd need to write a fully-functioning polyfill for the new CSS property `:local-link`. This example uses jQuery:
 
 ```
 var reURL = /^(?:(https?:)\/\/)?((?:[0-9a-z\.\-]+)(?::(?:\d+))?)/

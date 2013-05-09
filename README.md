@@ -24,7 +24,7 @@ Polyfill.js exposes a single constructor function called `Polyfill`. When you cr
 
 The following expression creates a new object to polyfill the `:local-link` CSS psuedo class:
 
-```
+```js
 var localLinkPolyfill = Polyfill({ selectors: [":local-link"] })
 ```
 
@@ -85,7 +85,7 @@ Register a callback to be invoked whenever new rules match the passed keywords. 
 
 #### example
 
-```
+```js
 polyfill.doMatched(function(rules) {
   // do somthing...
 })
@@ -109,7 +109,7 @@ Register a callback function to be invoked whenever previously matches rules no 
 polyfill.undoUnmatched(function(rules) {
   // do somthing...
 })
-````
+```
 
 ### Polyfill#getMatches()
 
@@ -237,7 +237,7 @@ var media = rule.getMedia()
 
 Putting it all together, this is all the code you'd need to write a fully-functioning polyfill for the new CSS property `:local-link`. This example uses jQuery:
 
-```
+```js
 var reURL = /^(?:(https?:)\/\/)?((?:[0-9a-z\.\-]+)(?::(?:\d+))?)/
 
 // First extend jQuery's selector engine

@@ -41,11 +41,11 @@
       <div class="grid">
         <div class="col-1-2">
           <h3>Download Version 0.1.0</h3>
-          <ul>
-            <li><a href="https://raw.github.com/philipwalton/polyfill/master/dist/polyfill.js">Development</a> &mdash; <em>28KB, with comments</em></li>
-            <li><a href="https://raw.github.com/philipwalton/polyfill/master/dist/polyfill.min.js">Production</a> &mdash; <em>3.6KB, minified</em></li>
-            <li><a href="https://github.com/philipwalton/polyfill/archive/master.zip">Full Project</a> &mdash; <em>ZIP format</em></li>
-          </ul>
+          <p>
+            <a href="https://raw.github.com/philipwalton/polyfill/master/dist/polyfill.js">Development</a> &mdash; <em>28KB, with comments</em><br>
+            <a href="https://raw.github.com/philipwalton/polyfill/master/dist/polyfill.min.js">Production</a> &mdash; <em>3.6KB, minified</em><br>
+            <a href="https://github.com/philipwalton/polyfill/archive/master.zip">Full Project</a> &mdash; <em>ZIP format</em>
+          </p>
         </div>
         <div class="col-1-2">
           <h3>Browser Support</h3>
@@ -101,25 +101,42 @@
       <p>The Polyfill.js API consists of three public object: <a href="#polyfill">Polyfill</a>, <a href="#ruleset">Ruleset</a>, and <a href="#rule">Rule</a>. Only Polyfill is accessible in the global scope, the others are passed as arguments to callback functions.</p>
       <h2 id="polyfill">The Polyfill Object</h2>
       <div class="Function">
-        <code class="Function-signature">Polyfill(keywords, [options])</code>
+        <code class="Function-signature">Polyfill(options)</code>
         <p>Create a new polyfill object. <em>(Note: the <code>new</code> operator is optional.)</em></p>
-        <p class="Function-arg"><strong>keywords</strong> {Object}: An object map containing an array of strings to match against CSS rules. The possible object keys are <code>declarations</code>, <code>selectors</code>, or <code>media</code>, and the values are an array or keywords. Keywords strings are literal matches, but you may also include an asterisk character which will match any number of characters (equivalent to the following Regex: <code>/.*/</code>).</p>
-        <p class="Function-arg"><strong>options</strong> {Object} <em>(optional)</em>: An object map containing an array of stylesheet IDs to include or exclude from the Polyfill. <code>include</code> and <code>exclude</code> cannot be used together. If both are passed, <code>include</code> is favored.</p>
+        <div class="Function-arg"><strong>options</strong> {Object}: A standard options object where the object key is the option name and the object value is the option value.
+          <ul>
+            <li><code>keywords</code>: {Object} An object containing the CSS keywords to search the stylesheets for. The keywords object may consist of selector keywords and/or declaration keywords. <em>(Note: if both are present a rule will be considered a match if it contains any of the passed keywords <strong>or</strong> any of the passed selectors)</em>
+              <ul>
+                <li><code>selectors</code>: {Array} a list of strings to match against CSS selectors.</li>
+                <li><code>declarations</code>: {Array} a list of strings to match against CSS declarations (property-value pairs). The format of the string must be <code>prop:value</code>. The string may optionally include an asterisk which will match any number of characters, e.g. <code>display:*flex</code> will match vendor prefixes.</li>
+              </ul>
+            </li>
+            <li><code>exclude</code>: {Array} a list of link element ID attributes. If the exclude options is present, all stylesheets but the ones with those IDs will be downloaded. </li>
+            <li><code>include</code>: {Array} a list of link element ID attributes. If the include option is present, only those stylesheets will be downloaded. <em>(Note: <code>exclude</code> and <code>include</code> cannot be used together)</em></li>
+          </ul>
+       </div>
         <p class="Function-returns"><strong>returns</strong> {Polyfill} the newly created instance</p>
 
 <pre class="Function-example"><code class="language-javascript">// create a polyfill for some CSS pseudo-classes
 var p1 = Polyfill({
-  selectors: [":local-link", ":nth-of-type"],
-  declarations: ["*border-radius:*", "position:sticky", "display:*flex"]
-}, {
-  exclude: ["third-party-css"]
+  exclude: ["third-party-css"],
+  keywords: {
+    selectors: [":local-link", ":nth-of-type"],
+    declarations: ["*border-radius:*", "position:sticky", "display:*flex"]
+  }
 })
 
 // create a polyfill for the flex display property
 var p2 = Polyfill({
-  declarations: ["display:*flex"]
-}, {
-  include: ["flexbox", "box"]
+  include: ["flexbox", "box"],
+  keywords: {
+    declarations: ["display:*flex"]
+  }
+})
+
+// create a polyfill by only passing keywords
+var p3 = Polyfill({
+  declarations: ["filter:*"]
 })
 </code></pre>
       </div>
@@ -232,8 +249,8 @@ $.extend($.expr[&#39;:&#39;], {
   }
 })
 
-// Now just let Polyfill.js do the rest
-Polyfill({selectors:[":local-link"]})
+// Create the polyfill and register the callbacks, that's it!
+Polyfill({ selectors: [":local-link"] })
   .doMatched(function(rules) {
     rules.each(function(rule) {
       $(rule.getSelectors()).css(rule.getDeclaration())
@@ -242,6 +259,9 @@ Polyfill({selectors:[":local-link"]})
   .undoUnmatched(function(rules) {
     rules.each(function(rule) {
       $(rule.getSelectors()).removeAttr("style")
+    })
+    localLinkPolyfill.getCurrentMatches().each(function(rule) {
+      $(rule.getSelectors()).css(rule.getDeclaration())
     })
   })
 </code></pre>

@@ -30,16 +30,20 @@ var localLinkPolyfill = Polyfill({ selectors: [":local-link"] })
 
 ### 3) Register Event Callbacks
 
-Once you have your polyfill instance, you simply register two callback: doMatched() and undoUnmatched(). When the page first loads and Polyfill.js has done all its work behind the scenes, the doMatched() callback is invoked and is passed a list of CSS rules that contain the specified keywords and match the current media.
+Once you have your polyfill instance, you simply register two callback: `doMatched()` and `undoUnmatched()`. When the page first loads and Polyfill.js has done all its work behind the scenes, the `doMatched()` callback is invoked and is passed a list of CSS rules that contain the specified keywords and match the current media.
 
-If the media values change (usually by resizing the browser window) and new rules match, the doMatched() callback will be invoked again, each time being passed the newly matched rules.
+If the media values change (usually by resizing the browser window) and new rules match, the `doMatched()` callback will be invoked again, each time being passed the newly matched rules.
 
-If the media value changes and some rules no longer match, the undoUnmatched() callback is invoked and passed a list of rules that used to match but now don't.
+If the media value changes and some rules no longer match, the `undoUnmatched()` callback is invoked and passed a list of rules that used to match but now don't.
 
 ## Demos
 
-* [Local Link]("/demos/local-link"): a new CSS pseudo-class for anchor tags that link to URLs within the current domain
-* [Position Sticky]("/demos/position-sticky"): a new CSS position value to allow elements to stick in place only after a specified scroll position is met.
+* [Local Link]("http://philipwalton.github.io/polyfill/demos/local-link"): Local links (`:local-link`) is a new CSS pseudo-class for styling anchor tags that point to URLs within the current domain.
+* [Position Sticky]("http://philipwalton.github.io/polyfill/demos/position-sticky"): "Sticky" is a new CSS position value to allow elements to stick in place only after a specified scroll position is met. This is most commonly used for navigation elements to stick in place after you start scrolling down the page.
 
 ## Running the Tests
+
+Polyfill.js includes a [Jasmine](http://pivotal.github.io/jasmine/) test suite and uses an embedded `iframe` to test the media queries and resize events. Polyfill.js has been tested on the latest Chrome, Firefox, Safari, Opera, and IE 7-10.
+
+If you use a browser other than these, please [run the test suite in your browser]("http://philipwalton.github.io/polyfill/spec/runner.html") and report back the results.
 

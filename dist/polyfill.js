@@ -4,7 +4,7 @@
  * Copyright (c) 2013 Philip Walton <http://philipwalton.com>
  * Released under the MIT license
  *
- * Date: 2013-05-11
+ * Date: 2013-05-12
  */
 ;(function(window, document, undefined){
 

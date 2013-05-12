@@ -31,7 +31,7 @@
   <section>
     <div class="container">
       <h1>Introduction</h1>
-      <p class="promo">Polyfill.js is library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.</p>
+      <p class="promo">Polyfill.js is a library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.</p>
       <p>For most CSS polyfills, the hardest part is not the polyfill logic itself, it's the boring stuff, the stuff that the browser is supposed to do for you: downloading the CSS, parsing it, and finding the parts you care about. If the CSS contains media queries, you need to deal with them, detect when they apply, and manually listen for changes.</p>
 
       <p>Furthermore, on the Web today, most polyfills exist isolated from each other, which means they all repeat the same expensive tasks. Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook in to, so all the hard work happens only once at most. The stylesheets are downloaded, parsed, and stored in a cache so additional requests don't do double work.</p>
@@ -67,12 +67,12 @@
       <pre><code>&lt;script src="path/to/polyfill.js">&lt;/script></code></pre>
       <h3>2) Create a new Polyfill Instance</h3>
       <p>You create a new instance of the Polyfill object by passing in one or more keywords representing the CSS features you want to polyfill. The keywords can be declaration keywords (property-value pairs) or selector keywords.</p>
-      <p>The following expression creates an instance to polyfill the <code>:local-link</code> CSS psuedo class:</p>
+      <p>The following expression creates an instance to polyfill the <code>:local-link</code> CSS pseudo-class:</p>
       <pre><code class="language-javascript">var localLinkPolyfill = Polyfill({ selectors: [":local-link"] })</code></pre>
       <h3>3) Register Event Callbacks</h3>
-      <p>Once you have your polyfill instance, you simply register two callback: <code>doMatched()</code> and <code>undoUnmatched()</code>. When the page first loads and Polyfill.js has done all its work behind the scenes, the <code>doMatched()</code> callback is invoked and is passed a list of CSS rules that contain the specified keywords and match the current media.</p>
+      <p>Once you have your polyfill instance, you simply register two callbacks: <code>doMatched()</code> and <code>undoUnmatched()</code>. When the page first loads and Polyfill.js has done all its work behind the scenes, the <code>doMatched()</code> callback is invoked and is passed a list of CSS rules that contain the specified keywords and match the current media.</p>
       <p>If the media values change (usually by resizing the browser window) and new rules match, the <code>doMatched()</code> callback will be invoked again, each time being passed the newly matched rules.</p>
-      <p>If the media value changes and some rules no longer match, the <code>undoUnmatched()</code> callback is invoked and passed a list of rules that used to match but now don&#39;t.</p>
+      <p>If the media value changes and some rules no longer match, the <code>undoUnmatched()</code> callback is invoked and passed a list of rules that previously matched but no longer do.</p>
     </div>
   </section>
 
@@ -99,20 +99,20 @@
   <section>
     <div class="container">
       <h1 id="api">API</h1>
-      <p>The Polyfill.js API consists of three public object: <a href="#polyfill">Polyfill</a>, <a href="#ruleset">Ruleset</a>, and <a href="#rule">Rule</a>. Only Polyfill is accessible in the global scope, the others are passed as arguments to callback functions.</p>
+      <p>The Polyfill.js API consists of three public objects: <a href="#polyfill">Polyfill</a>, <a href="#ruleset">Ruleset</a>, and <a href="#rule">Rule</a>. Only Polyfill is accessible in the global scope, the others are passed as arguments to callback functions.</p>
       <h2 id="polyfill">The Polyfill Object</h2>
       <div class="Function">
         <code class="Function-signature">Polyfill(options)</code>
         <p>Create a new polyfill object. <em>(Note: the <code>new</code> operator is optional.)</em></p>
         <div class="Function-arg"><strong>options</strong> {Object}: A standard options object where the object key is the option name and the object value is the option value.
           <ul>
-            <li><code>keywords</code>: {Object} An object containing the CSS keywords to search the stylesheets for. The keywords object may consist of selector keywords and/or declaration keywords. <em>(Note: if both are present a rule will be considered a match if it contains any of the passed keywords <strong>or</strong> any of the passed selectors)</em>
+            <li><code>keywords</code>: {Object} An object containing the CSS keywords to search the stylesheets for. The keywords object may consist of selector keywords and/or declaration keywords. <em>(Note: if both are present a rule will be considered a match if it contains either selector keywords or declaration keywords.)</em>
               <ul>
                 <li><code>selectors</code>: {Array} a list of strings to match against CSS selectors.</li>
-                <li><code>declarations</code>: {Array} a list of strings to match against CSS declarations (property-value pairs). The format of the string must be <code>prop:value</code>. The string may optionally include an asterisk which will match any number of characters, e.g. <code>display:*flex</code> will match vendor prefixes.</li>
+                <li><code>declarations</code>: {Array} a list of strings to match against CSS declarations (property-value pairs). The format of the string must be <code>prop:value</code>. The string may optionally include an asterisk which will match any number of characters, e.g. <code>display:*flex</code> will match vendor prefixes. <em>(Note: whitespace on either side of the colon is not significant.)</em></li>
               </ul>
             </li>
-            <li><code>exclude</code>: {Array} a list of link element ID attributes. If the exclude options is present, all stylesheets but the ones with those IDs will be downloaded. </li>
+            <li><code>exclude</code>: {Array} a list of link element ID attributes. If the exclude option is present, all stylesheets but the ones with those IDs will be downloaded. </li>
             <li><code>include</code>: {Array} a list of link element ID attributes. If the include option is present, only those stylesheets will be downloaded. <em>(Note: <code>exclude</code> and <code>include</code> cannot be used together)</em></li>
           </ul>
        </div>
@@ -154,7 +154,7 @@ var p3 = Polyfill({
 
       <div class="Function">
         <code class="Function-signature">.undoUnmatched(callback)</code>
-        <p>Register a callback function to be invoked whenever previously matches rules no longer match. This could be because the media changed or the polyfill was destroyed.</p>
+        <p>Register a callback function to be invoked whenever previously matched rules no longer match. This could be because the media changed or the polyfill was destroyed.</p>
         <p class="Function-arg"><strong>callback</strong> {Function}: A callback function. Each invocation is passed a <a href="#ruleset">Ruleset</a> object which contains all of the newly matched CSS rules.</p>
         <p class="Function-returns"><strong>returns</strong> {Polyfill} the current <a href="#polyfill">Polyfill</a> instance</p>
 <pre class="Function-example"><code class="language-javascript">polyfill.undoUnmatched(function(rules) {
@@ -165,14 +165,14 @@ var p3 = Polyfill({
 
       <div class="Function">
         <code class="Function-signature">.getMatches()</code>
-        <p>Fetch all the CSS rules that match the current media. <em>(Note: rules that are not in a media block always matches and are returned as well.)</em></p>
-        <p class="Function-returns"><strong>returns</strong> {Ruleset} a <a href="#ruleset">Ruleset</a> object containing all of the currently matches rules.</p>
+        <p>Fetch all the CSS rules that match the current media. <em>(Note: rules that are not in a media block always match.)</em></p>
+        <p class="Function-returns"><strong>returns</strong> {Ruleset} a <a href="#ruleset">Ruleset</a> object containing all of the currently matched rules.</p>
         <pre class="Function-example"><code class="language-javascript">var matches = polyfill.getMatches()</code></pre>
       </div>
 
       <div class="Function">
         <code class="Function-signature">.destroy()</code>
-        <p>Destroy the polyfill instance by removing any media listeners and invoking the undoMatched callback.</p>
+        <p>Destroy the polyfill instance by removing any media listeners and invoking the <code>undoMatched</code> callback.</p>
         <p class="Function-returns"><strong>returns</strong> {undefined}</p>
         <pre class="Function-example"><code class="language-javascript">polyfill.destroy()</code></pre>
       </div>
@@ -181,7 +181,7 @@ var p3 = Polyfill({
 
       <div class="Function">
         <code class="Function-signature">.each(callback)</code>
-        <p>Iterates over a Ruleset invoking a callback for each Rule object in the Ruleset. Callbacks are invoked with the Rule object as their only arguments.</p>
+        <p>Iterates over a <a href="#ruleset">Ruleset</a> invoking a callback for each <a href="#rule">Rule</a> object in the Ruleset. Callbacks are invoked with the Rule object as their only arguments.</p>
         <p class="Function-arg"><strong>callback</strong> {Function}: the function called per iteration</p>
         <p class="Function-returns"><strong>returns</strong> {Ruleset} the current instance</p>
 
@@ -193,7 +193,7 @@ var p3 = Polyfill({
 
       <div class="Function">
         <code class="Function-signature">.at(index)</code>
-        <p>Returns the <code>Rule</code> instance at the specified index.</p>
+        <p>Returns the <a href="#rule">Rule</a> instance at the specified index.</p>
         <p class="Function-arg"><strong>index</strong> (Number): the index of the rule to return</p>
         <p class="Function-returns"><strong>returns</strong> {Rule} the Rule object at the specified index.</p>
         <pre class="Function-example"><code class="language-javascript">var rule = rules.at(0)</code></pre>
@@ -201,7 +201,7 @@ var p3 = Polyfill({
 
       <div class="Function">
         <code class="Function-signature">.size()</code>
-        <p>Returns the number of rules in the Ruleset</p>
+        <p>Returns the number of rules in the <a href="#ruleset">Ruleset</a></p>
         <p class="Function-returns"><strong>returns</strong> {Number}</p>
         <pre class="Function-example"><code class="language-javascript">var length = rules.size()</code></pre>
       </div>
@@ -210,15 +210,15 @@ var p3 = Polyfill({
 
       <div class="Function">
         <code class="Function-signature">.getSelectors()</code>
-        <p>Returns the full selector as a string. If the rule contains more than one selector they are join with a comma.</p>
+        <p>Returns the full selector as a string. If the rule contains more than one selector they are joined with a comma.</p>
         <p class="Function-returns"><strong>returns</strong> {String} the full selector</p>
         <pre class="Function-example"><code class="language-javascript">var selector = rule.getSelectors()</code></pre>
       </div>
 
       <div class="Function">
         <code class="Function-signature">.getDeclaration()</code>
-        <p>Returns an object map of the CSS declaration. <em>(Note: since an object cannot have duplicate keys, duplicate CSS property values ignored. If you need to access duplicate CSS values, you can manually inspect the <code>Rule</code> instance for the raw data.)</em></p>
-        <p class="Function-returns"><strong>returns</strong> {Object} the rule&#39;s declaration</p>
+        <p>Returns an object map of the CSS declaration. <em>(Note: since an object cannot have duplicate keys, duplicate CSS property values ignored. If you need to access duplicate CSS values, you can manually inspect the <a href="#rule">Rule</a> instance for the raw data.)</em></p>
+        <p class="Function-returns"><strong>returns</strong> {Object} the rule's declaration</p>
         <pre class="Function-example"><code class="language-javascript">var declaration = rule.getDeclaration()</code></pre>
       </div>
 
@@ -234,14 +234,14 @@ var p3 = Polyfill({
   <section>
     <div class="container">
       <h1>A Complete Example</h1>
-      <p>Putting it all together, this is all the code you&#39;d need to write a functioning polyfill for the new CSS property <code>:local-link</code>, which allows you to style links based on whether their <code>href</code> attribute points to a URL on the same domain <em>(ok, there's a little more to it than that, but you get the idea)</em>.</p>
+      <p>Putting it all together, this is all the code you'd need to write a functioning polyfill for the new CSS property <code>:local-link</code>, which allows you to style links based on whether their <code>href</code> attribute points to a URL on the same domain <em>(ok, there's a little more to it than that, but you get the idea)</em>.</p>
       <p><strong>Note:</strong> This example uses jQuery:</p>
 
 <pre><code class="language-javascript">// First write a RegExp to match local links
 var reURL = /^(?:(https?:)\/\/)?((?:[0-9a-z\.\-]+)(?::(?:\d+))?)/
 
-// Then extend jQuery&#39;s selector engine to target local links
-$.extend($.expr[&#39;:&#39;], {
+// Then extend jQuery's selector engine to target local links
+$.extend($.expr[':'], {
   "local-link": function(el) {
     var url = el.href.match(reURL)
       , protocol = url[1]

@@ -5,6 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Polyfill.js &mdash; CSS Polyfilling Made Easy</title>
   <link href="css/docs.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="lib/html5shiv.js"></script>
+  <![endif]-->
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -81,14 +84,12 @@
           <div class="demo">
             <h3>Position Sticky</h3> <a href="demos/position-sticky/">View Demo</a>
             <p>"Sticky" is a new CSS position value to allow elements to stick in place only after a specified scroll position is met. This is most commonly used for navigation elements to stick in place after you start scrolling down the page.</p>
-            <p></p>
           </div>
         </div>
         <div class="col-1-2">
           <div class="demo">
             <h3>Local Links</h3> <a href="demos/local-link/">View Demo</a>
             <p>Local links (<code>:local-link</code>) is a new CSS pseudo-class for styling anchor tags that point to URLs within the current domain.</p>
-            <p></p>
           </div>
         </div>
       </div>
@@ -269,9 +270,10 @@ Polyfill({ selectors: [":local-link"] })
     </div>
   </section>
 
-
+  <!--[if gte IE 9]><!-->
   <script src="lib/highlight.js"></script>
   <script>hljs.initHighlightingOnLoad()</script>
+  <!--<![endif]-->
 
 </body>
 </html>

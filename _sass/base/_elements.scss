@@ -30,7 +30,7 @@ pre {
 
 code {
   @include border-radius(3px);
-  padding: 3px 4px 0;
+  padding: 2px 4px 0;
   background-color: $background-color;
   color: black;
   font: .92em $font-family-monospaced;
@@ -48,12 +48,6 @@ ul {
 ul ul {
   margin: 0;
 }
-
-li {
-  // margin-bottom: .25em;
-}
-
-
 
 h1, h2, h3 {
   color: #000;

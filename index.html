@@ -31,12 +31,7 @@
       <p class="promo">Polyfill.js is library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.</p>
       <p>For most CSS polyfills, the hardest part is not the polyfill logic, it's the boring stuff, the stuff that the browser is supposed to do for you: downloading the CSS, parsing it, and finding the parts you care about. If the CSS contains media queries, you need to deal with them, detect when they apply, and manually listen for changes.</p>
 
-      <p>It's a lot of work, but Polyfill.js does the majority of it for you. And it's only <strong>3.6KB</strong> minified and gzipped!</p>
-
-      <!--
-      <p>Pretty much every single CSS polyfill needs to download and parse all of the stylesheets and if the polyfill supports media queries it also needs to add media listeners (or a window resize listener in old browsers). If you include more than one polyfill on your page, that starts to get incredibly expensive and wasteful.</p>
-      <p>Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook into, so all the hard work happens only once at most. Downloaded stylesheets are parsed and stored in a cache so additional instances don't do double work. And if the same media queries are needed for two separate polyfill instances, only one event listener is added.</p
-      -->
+      <p>Furthermore, on the Web today, most polyfills exist isolated from each other, which means they all repeat the same expensive tasks. Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook into, so all the hard work happens only once at most. Downloaded stylesheets are parsed and stored in a cache so additional instances don't do double work. And if the same media queries are needed for two separate polyfill instances, only one event listener is added.</p>
 
     </div>
   </section>

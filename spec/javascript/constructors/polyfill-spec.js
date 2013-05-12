@@ -181,7 +181,7 @@ describe("Polyfill", function() {
       })
     })
 
-    it("ignores stylesheets from different domains", function() {
+    it("ignores stylesheets from external domains", function() {
       createPolyfill({
         include: ["media-test", "external-domain"],
         keywords: {

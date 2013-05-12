@@ -2,13 +2,13 @@
 
 Polyfill.js is library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.
 
-For most CSS polyfills, the hardest part is not the polyfill logic, it's the boring stuff, the stuff that the browser is supposed to do for you: downloading the CSS, parsing it, and finding the parts you care about. If the CSS contains media queries, you need to deal with them, detect when they apply, and manually listen for changes.
+For most CSS polyfills, the hardest part is not the polyfill logic itself, it's the boring stuff, the stuff that the browser is supposed to do for you: downloading the CSS, parsing it, and finding the parts you care about. If the CSS contains media queries, you need to deal with them, detect when they apply, and manually listen for changes.
 
-Furthermore, on the Web today, most polyfills exist isolated from each other, which means they all repeat the same expensive tasks. Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook into, so all the hard work happens only once at most. Downloaded stylesheets are parsed and stored in a cache so additional instances don't do double work. And if the same media queries are needed for two separate polyfill instances, only one event listener is added.
+Furthermore, on the Web today, most polyfills exist isolated from each other, which means they all repeat the same expensive tasks. Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook in to, so all the hard work happens only once at most. The stylesheets are downloaded, parsed, and stored in a cache so additional requests don't do double work.
 
 ## How It Works
 
-Polyfill.js make writing your own CSS Polyfill easy by breaking it down into the following three steps:
+Polyfill.js makes writing your own CSS Polyfill easy by breaking it down into the following three steps:
 
 ### 1) Include the Polyfill.js library on your page.
 

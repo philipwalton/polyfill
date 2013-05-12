@@ -29,9 +29,9 @@
     <div class="container">
       <h1>Introduction</h1>
       <p class="promo">Polyfill.js is library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.</p>
-      <p>For most CSS polyfills, the hardest part is not the polyfill logic, it's the boring stuff, the stuff that the browser is supposed to do for you: downloading the CSS, parsing it, and finding the parts you care about. If the CSS contains media queries, you need to deal with them, detect when they apply, and manually listen for changes.</p>
+      <p>For most CSS polyfills, the hardest part is not the polyfill logic itself, it's the boring stuff, the stuff that the browser is supposed to do for you: downloading the CSS, parsing it, and finding the parts you care about. If the CSS contains media queries, you need to deal with them, detect when they apply, and manually listen for changes.</p>
 
-      <p>Furthermore, on the Web today, most polyfills exist isolated from each other, which means they all repeat the same expensive tasks. Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook into, so all the hard work happens only once at most. Downloaded stylesheets are parsed and stored in a cache so additional instances don't do double work. And if the same media queries are needed for two separate polyfill instances, only one event listener is added.</p>
+      <p>Furthermore, on the Web today, most polyfills exist isolated from each other, which means they all repeat the same expensive tasks. Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook in to, so all the hard work happens only once at most. The stylesheets are downloaded, parsed, and stored in a cache so additional requests don't do double work.</p>
 
     </div>
   </section>
@@ -58,12 +58,15 @@
   <section>
     <div class="container">
       <h1>How It Works</h1>
-      <p class="promo">Polyfill.js breaks everything down into two basic steps:</p>
-      <h3>1) Create a new Polyfill Instance</h3>
+      <p class="promo">Polyfill.js makes writing your own CSS Polyfill easy by breaking it down into the following three steps:</p>
+      <h3>1) Include the Polyfill.js library on your page.</h3>
+      <p>It doesn't really matter where you put it, as long as it appears after the stylesheet(s) containing the rules you want to polyfill.</p>
+      <pre><code>&lt;script src="path/to/polyfill.js">&lt;/script></code></pre>
+      <h3>2) Create a new Polyfill Instance</h3>
       <p>You create a new instance of the Polyfill object by passing in one or more keywords representing the CSS features you want to polyfill. The keywords can be declaration keywords (property-value pairs) or selector keywords.</p>
       <p>The following expression creates an instance to polyfill the <code>:local-link</code> CSS psuedo class:</p>
       <pre><code class="language-javascript">var localLinkPolyfill = Polyfill({ selectors: [":local-link"] })</code></pre>
-      <h3>2) Register Event Callbacks</h3>
+      <h3>3) Register Event Callbacks</h3>
       <p>Once you have your polyfill instance, you simply register two callback: <code>doMatched()</code> and <code>undoUnmatched()</code>. When the page first loads and Polyfill.js has done all its work behind the scenes, the <code>doMatched()</code> callback is invoked and is passed a list of CSS rules that contain the specified keywords and match the current media.</p>
       <p>If the media values change (usually by resizing the browser window) and new rules match, the <code>doMatched()</code> callback will be invoked again, each time being passed the newly matched rules.</p>
       <p>If the media value changes and some rules no longer match, the <code>undoUnmatched()</code> callback is invoked and passed a list of rules that used to match but now don&#39;t.</p>

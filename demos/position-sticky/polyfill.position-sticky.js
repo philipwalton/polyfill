@@ -105,8 +105,12 @@
     })
   }
 
-  Polyfill({declarations:["position:sticky"]})
-    .doMatched(doMatched)
-    .undoUnmatched(undoUnmatched)
+  Polyfill({
+    declarations:["position:sticky"]
+  }, {
+    include: ["position-sticky"]
+  })
+  .doMatched(doMatched)
+  .undoUnmatched(undoUnmatched)
 
 }(jQuery))

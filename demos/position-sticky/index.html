@@ -4,52 +4,33 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Polyfill.js Demo &mdash; position: sticky</title>
-    <!-- <link type="text/css" href="/demos/css/reset.css" rel="stylesheet"> -->
-    <link type="text/css" href="/demos/css/bootstrap.css" rel="stylesheet">
-    <link type="text/css" href="style.css" rel="stylesheet">
+    <link type="text/css" href="../../css/demos.css" rel="stylesheet">
+    <link id="position-sticky" type="text/css" href="style.css" rel="stylesheet">
   </head>
   <body>
 
-
-
     <div class="header">
       <div class="center">
-        <h1 class="header-title">Polyfill.js Demo<h1>
-        <h2 class="header-subtitle">Position: Sticky</h2>
+        <h1 class="header-title">Demo: Position Sticky</h1>
       </div>
     </div>
 
-    <div class="navbar navbar-inverse">
-      <div class="navbar-inner">
-        <div class="center">
-          <ul class="nav">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Follow</a></li>
-          </ul>
-        </div>
-      </div>
+    <div class="nav">
+      <div class="center">Top navigation bar <em>(this will stick when scrolling)</em></div>
     </div>
 
     <div class="center">
 
       <div class="sidebar">
-        <h4>Links</h4>
-        <ul>
-          <li><a href="http://github.com/">Demo Source</a></li>
-          <li><a href="#">Polyfill.js</a></li>
-        </ul>
-        <h4>More Info</h4>
-        <ul>
-          <li><a href="#">About `position:sticky`</a></li>
-          <li><a href="#">www-style discussion</a></li>
-        </ul>
-
+        <h2>Sidebar</h2>
+        <p>This sidebar will stick when scrolling as long as the window is larger than <code>40em</code>.</p>
+        <p>When smaller than <code>40em</code> the sidebar appear in the normal flow above the main content.</p>
+        <p><a href="">View Demo Source</a></p>
       </div>
 
       <div class="content">
 
-        <h3>What It Is</h3>
+        <h2>What Is Position Sticky?</h2>
 
         <p><code>position: sticky</code> is a newly proposed feature of CSS that allows you to conditionally position elements based on the user's scroll position. Elements that have a position value of <code>sticky</code> will remain in the normal flow until their <code>top</code>, <code>right</code>, <code>bottom</code>, or <code>left</code> value are less than or equal to the users scroll position in that direction. After that condition is met the element "sticks" in place, behaving very similar to <code>position: fixed</code>.</p>
 
@@ -60,7 +41,7 @@
 
         <p>For a more detailed look at <code>position: sticky</code>, this <a href="http://updates.html5rocks.com/2012/08/Stick-your-landings-position-sticky-lands-in-WebKit">HTML5Rocks</a> is very informative.</p>
 
-        <h3>What to Look For</h3>
+        <h2>What to Look For In This Demo</h2>
 
         <p class="alert alert-success">Scroll down to see the demo in action, and resize the window to see how it responds at different media values.</p>
 
@@ -78,18 +59,18 @@
 <pre><code>@media (min-width: 40em) {
   .sidebar {
     position: sticky;
-    top: 68px;
+    top: 82px;
     float: right;
   }
 }</code></pre>
 
-        <p>When the window is wider than <code>40em</code> the sidebar should be floated to the right, and when the user has scrolled such that the sidebar is less than or equal to 68 pixels from the top of the page. It will stick in place.</p>
+        <p>When the window is wider than <code>40em</code> the sidebar should be floated to the right, and when the user has scrolled such that the sidebar is less than or equal to 82 pixels from the top of the page. It will stick in place.</p>
 
         <p>If at any point the window becomes smaller than <code>40em</code>, even if the sidebar is currently in sticky mode, the entire declaration should be ignored and the sidebar should return to the normal flow.</p>
 
         <p>The complete HTML, CSS, and JavaScript code is available in the <a href="#">demo folder of the Polyfill.js Github repository</a>.</p>
 
-        <h3>Limitations</h3>
+        <h2>Limitations</h2>
 
         <p>There is currently no W3c specification for the position value <code>sticky</code>, as such this polyfill is limited in scope. It is also primarily for demonstration purposes, and should not be considered ready for production code.</p>
 
@@ -97,7 +78,7 @@
 
         <p>In addition, Chrome's implementation of <code>position: sticky</code> confines an element to within the bounds of its parent, which this polyfill does not attempt to do.</p>
 
-        <h3>Keep Scrolling...</h3>
+        <h2>Keep Scrolling...</h2>
 
         <p>In order to see the scrolling in action, the page needs to be tall enough to scroll, do here's our old friend Lorem Ipsum</p>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et ligula lorem, eu dapibus nulla. Donec cursus interdum ipsum, sit amet cursus felis rhoncus eu. Duis sollicitudin dignissim sapien, ac placerat dolor rutrum vitae. In eu orci nunc, vitae feugiat neque. Fusce sed est vitae felis fringilla elementum. Aenean tortor justo, facilisis eu tempus non, hendrerit id nunc. Etiam blandit odio eget metus sollicitudin aliquam. Nam nunc sem, lacinia eget sollicitudin bibendum, suscipit vel arcu. Nullam in volutpat justo. Etiam non risus felis, vitae volutpat nisi. Morbi libero orci, porta vitae blandit quis, tristique ut risus. Aenean condimentum dictum dolor eu cursus.</p>

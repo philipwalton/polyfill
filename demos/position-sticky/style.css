@@ -1,35 +1,22 @@
 .header {
-  padding: 5em 0 3em;
-  background-color: hsl(0, 0%, 25%);
-  background-image: linear-gradient(to bottom right, hsl(180, 50%, 20%), hsl(210, 100%, 4%));
+  padding: 4em 0 3em;
+  background-color: brown;
 }
 
 .header-title {
   margin: 0;
   color: white;
-  font-size: 5em;
+  font-size: 4em;
   line-height: 1;
-  text-shadow: 0 0 10px #000;
-}
-.header-subtitle {
-  margin: 0;
-  color: #909090;
-  color: rgba(255,255,255,0.5);
-  font-size: 2em;
-  font-weight: 400;
 }
 
-.navbar {
+.nav {
   position: sticky;
   top: 0;
   margin-bottom: 2em;
-}
-
-.navbar .navbar-inner {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  box-shadow: 0 0 5px rgba(0,0,0,.7);
+  padding: 1em 0;
+  background-color: black;
+  color: white;
 }
 
 .center {
@@ -41,7 +28,7 @@
 @media (min-width: 40em) {
   .sidebar {
     position: sticky;
-    top: 68px;
+    top: 82px;
     float: right;
     width: 11em;
   }

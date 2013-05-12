@@ -73,17 +73,13 @@ module.exports = function(grunt) {
       }
     },
     shell: {
-      checkoutGhPages: {
-        command: "git checkout gh-pages"
-      },
-      rebaseMaster: {
-        command: "git rebase master"
-      },
-      pushGhPages: {
-        command: "git push origin gh-pages"
-      },
-      checkoutMaster: {
-        command: "git rebase master"
+      "gh-pages": {
+        command: [
+          "git checkout gh-pages",
+          "git rebase master",
+          "git push origin gh-pages",
+          "git checkout master"
+        ].join(" && ")
       }
     }
   });
@@ -100,6 +96,6 @@ module.exports = function(grunt) {
   grunt.registerTask("default", ["compass", "concat", "jshint", "uglify"]);
 
   // Push gh-pages branch to Github Pages
-  grunt.registerTask("gh-pages", ["shell:checkoutGhPages", "shell:rebaseMaster", "shell:pushGhPages", "shell:checkoutMaster"]);
+  grunt.registerTask("gh-pages", ["shell:gh-pages"]);
 
 };

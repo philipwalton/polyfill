@@ -13,10 +13,10 @@ describe("DownloadManager", function() {
       var stylesheets
 
       DownloadManager.request([
-        "/spec/css/exclude-test1.css",
-        "/spec/css/exclude-test2.css",
-        "/spec/css/include-test1.css",
-        "/spec/css/include-test2.css"
+        "../spec/css/exclude-test1.css",
+        "../spec/css/exclude-test2.css",
+        "../spec/css/include-test1.css",
+        "../spec/css/include-test2.css"
       ], function(results) {
         stylesheets = results
       })
@@ -38,10 +38,10 @@ describe("DownloadManager", function() {
         , startingRequestCount = DownloadManager._getRequestCount()
 
       DownloadManager.request([
-        "/spec/css/exclude-test1.css",
-        "/spec/css/exclude-test2.css",
-        "/spec/css/include-test1.css",
-        "/spec/css/include-test2.css"
+        "../spec/css/exclude-test1.css",
+        "../spec/css/exclude-test2.css",
+        "../spec/css/include-test1.css",
+        "../spec/css/include-test2.css"
       ], function(results) {
         stylesheets = results
       })
@@ -52,7 +52,7 @@ describe("DownloadManager", function() {
 
       runs(function() {
         expect(DownloadManager._getRequestCount()).toBe(startingRequestCount + 4)
-        DownloadManager.request(["/spec/css/exclude-test1.css"], function(results) {
+        DownloadManager.request(["../spec/css/exclude-test1.css"], function(results) {
           cachedResult = results
         })
       })
@@ -74,8 +74,8 @@ describe("DownloadManager", function() {
         , startingRequestCount = DownloadManager._getRequestCount()
 
       DownloadManager.request([
-        "/spec/css/exclude-test1.css",
-        "/spec/css/exclude-test2.css"
+        "../spec/css/exclude-test1.css",
+        "../spec/css/exclude-test2.css"
       ], function(results) {
         stylesheets = results
       })
@@ -87,7 +87,7 @@ describe("DownloadManager", function() {
       runs(function() {
         expect(DownloadManager._getRequestCount()).toBe(startingRequestCount + 2)
         DownloadManager.clearCache()
-        DownloadManager.request(["/spec/css/exclude-test1.css"], function(results) {
+        DownloadManager.request(["../spec/css/exclude-test1.css"], function(results) {
           cachedResult = results
         })
       })

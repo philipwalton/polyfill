@@ -208,7 +208,7 @@ describe("StyleManager", function() {
 
     it("can parse a sting of CSS and return a list of structured rules", function() {
       var stylesheet
-      DownloadManager.request(["/spec/css/parse-test.css"], function(result) {
+      DownloadManager.request(["../spec/css/parse-test.css"], function(result) {
         stylesheet = result[0]
       })
       waitsFor(function() { return stylesheet })
@@ -225,7 +225,7 @@ describe("StyleManager", function() {
 
     beforeEach(function() {
       var stylesheet
-      DownloadManager.request(["/spec/css/filter-test.css"], function(result) {
+      DownloadManager.request(["../spec/css/filter-test.css"], function(result) {
         parsedRules = StyleManager.parse(result[0])
       })
       waitsFor(function() { return parsedRules })

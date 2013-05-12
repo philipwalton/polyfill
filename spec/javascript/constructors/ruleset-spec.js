@@ -9,7 +9,7 @@ describe("Ruleset", function() {
     , DownloadManager = Polyfill.modules.DownloadManager
 
   beforeEach(function() {
-    DownloadManager.request(["/spec/css/filter-test.css"], function(result) {
+    DownloadManager.request(["../spec/css/filter-test.css"], function(result) {
       parsedRules = StyleManager.parse(result[0])
       filteredRules = StyleManager.filter(parsedRules, {
         "declarations": ["*:*"]

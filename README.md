@@ -38,12 +38,12 @@ If the media value changes and some rules no longer match, the `undoUnmatched()`
 
 ## Demos
 
-* [Local Link]("http://philipwalton.github.io/polyfill/demos/local-link"): Local links (`:local-link`) is a new CSS pseudo-class for styling anchor tags that point to URLs within the current domain.
-* [Position Sticky]("http://philipwalton.github.io/polyfill/demos/position-sticky"): "Sticky" is a new CSS position value to allow elements to stick in place only after a specified scroll position is met. This is most commonly used for navigation elements to stick in place after you start scrolling down the page.
+* [Local Link](http://philipwalton.github.io/polyfill/demos/local-link): Local links (`:local-link`) is a new CSS pseudo-class for styling anchor tags that point to URLs within the current domain.
+* [Position Sticky](http://philipwalton.github.io/polyfill/demos/position-sticky): "Sticky" is a new CSS position value to allow elements to stick in place only after a specified scroll position is met. This is most commonly used for navigation elements to stick in place after you start scrolling down the page.
 
 ## Running the Tests
 
 Polyfill.js includes a [Jasmine](http://pivotal.github.io/jasmine/) test suite and uses an embedded `iframe` to test the media queries and resize events. Polyfill.js has been tested on the latest Chrome, Firefox, Safari, Opera, and IE 7-10.
 
-If you use a browser other than these, please [run the test suite in your browser]("http://philipwalton.github.io/polyfill/spec/runner.html") and report back the results.
+If you use a browser other than these, please [run the test suite in your browser](http://philipwalton.github.io/polyfill/spec/runner.html) and report back the results.
 

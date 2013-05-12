@@ -1,0 +1,28 @@
+.Header {
+  @include background-image(radial-gradient(hsl(21, 100%, 10%),hsl(12, 100%, 5%)));
+  margin-bottom: 4em;
+  padding: 6em 0 4em;
+  background-color: #202020;
+  // radial-gradient(circle at center, hsl(20, 100%, 10%),hsl(20, 100%, 5%))
+  text-align: center;
+}
+
+.Header-title {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #fff;
+  font-size: 6.4em;
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+
+.Header-subtitle {
+  margin: 0.8em 0 1.6em;
+  padding: 0;
+  border: 0;
+  color: #808080;
+  color: rgba(255,255,255,0.5);
+  font-weight: 400;
+  font-size: 1.4em;
+}

@@ -30,6 +30,7 @@ function inArray(target, items) {
   return false
 }
 
+
 /**
  * Determine if a method is support natively by the browser
  */

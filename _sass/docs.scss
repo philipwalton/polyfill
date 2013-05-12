@@ -1,0 +1,27 @@
+@import "base/functions";
+@import "base/variables";
+@import "base/breakpoints";
+@import "base/compass";
+@import "base/normalize";
+@import "base/elements";
+
+@import "components/code";
+@import "components/function";
+@import "components/header";
+@import "components/button";
+
+@import "layout/site";
+@import "layout/grid";
+
+.promo {
+  font-size: 1.3em;
+}
+
+section {
+  margin: 2em 0;
+}
+
+.striped {
+  padding: 2em 0 1em;
+  background-color: $background-color;
+}

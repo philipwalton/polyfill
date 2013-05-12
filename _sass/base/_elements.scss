@@ -1,0 +1,71 @@
+*, *:before, *:after {
+  @include box-sizing(border-box);
+}
+
+html {
+  font: 300 1em "Helvetica Neue", sans-serif;
+  line-height: 1.5;
+  color: $text-color;
+}
+
+a {
+  color: $accent-color;
+  text-decoration: none;
+  &:hover, &:active {
+    text-decoration: underline;
+  }
+}
+
+strong {
+  color: #000;
+}
+
+pre {
+  @include border-radius(3px);
+  margin-bottom: 2em;
+  padding: 1em 1.5em;
+  background-color: $background-color;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.75);
+}
+
+code {
+  @include border-radius(3px);
+  padding: 3px 4px 0;
+  background-color: $background-color;
+  color: black;
+  font: .92em $font-family-monospaced;
+}
+
+pre code {
+  padding: 0;
+}
+
+ol, ul {
+  margin: 1em 0;
+  padding-left: 0;
+}
+
+ul {
+  list-style-type: none;
+}
+
+h1, h2, h3 {
+  color: #000;
+}
+
+h1 {
+  margin: 0 0 0.667em;
+  font-size: 2.4em;
+  text-align: center;
+}
+
+h2 {
+  margin: 1.333em 0 1em;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+h3 {
+  display: inline-block;
+  margin: 0 0.333em 0 0;
+}

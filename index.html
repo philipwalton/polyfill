@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Polyfill.js &mdash; CSS Polyfilling Made Easy</title>
+  <link href="/css/docs.css" rel="stylesheet">
+</head>
+<body>
+
+  <header class="Header">
+    <div class="container">
+      <h1 class="Header-title">Polyfill.js</h1>
+      <h2 class="Header-subtitle">CSS Polyfilling Made Easy</h2>
+      <a href="#" class="Button Button--action">Download Polyfill.js</a>
+      <a href="#" class="Button">View Source on GitHub</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="container">
+      <h1>Introduction</h1>
+      <p class="promo">Polyfill.js is library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.</p>
+      <p>For most CSS polyfills, the hardest part is not the polyfill logic, it's the boring stuff, the stuff that the browser is supposed to do for you: downloading the CSS, parsing it, and finding the parts you care about. If the CSS contains media queries, you need to deal with them, detect when they apply, and manually listen for changes.</p>
+      <p>It's a lot of work, but Polyfill.js does the majority of it for you. And it's only <strong>3.6KB</strong> minified and gzipped!</p>
+    </div>
+  </section>
+
+  <section class="striped">
+    <div class="container">
+      <div class="grid">
+        <div class="col-1-2">
+          <h3>Download Version 0.1.0</h3>
+          <ul>
+            <li><a href="">Development</a> &mdash; <em>28KB, with comments</em></li>
+            <li><a href="">Production</a> &mdash; <em>3.6KB, minified</em></li>
+            <li><a href="https://github.com/philipwalton/polyfill/archive/master.zip">Full Project</a> &mdash; <em>ZIP format</em></li>
+          </ul>
+        </div>
+        <div class="col-1-2">
+          <h3>Browser Support</h3>
+          <p>Polyfill.js has been tested in all modern browsers and supports Chrome, Firefox, Safari, Opera, and Internet Explorer 7+.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h1>How It Works</h1>
+      <p class="promo">Polyfill.js breaks everything down into two basic steps:</p>
+      <h3>1) Create a new Polyfill Instance</h3>
+      <p>You create a new instance of the Polyfill object by passing in one or more keywords representing the CSS features you want to polyfill. The keywords can be declaration keywords (property-value pairs) or selector keywords.</p>
+      <p>The following expression creates an instance to polyfill the <code>:local-link</code> CSS psuedo class:</p>
+      <pre><code class="language-javascript">var localLinkPolyfill = Polyfill({ selectors: [":local-link"] })</code></pre>
+      <h3>2) Register Event Callbacks</h3>
+      <p>Once you have your polyfill instance, you simply register two callback: <code>doMatched()</code> and <code>undoUnmatched()</code>. When the page first loads and Polyfill.js has done all its work behind the scenes, the <code>doMatched()</code> callback is invoked and is passed a list of CSS rules that contain the specified keywords and match the current media.</p>
+      <p>If the media values change (usually by resizing the browser window) and new rules match, the <code>doMatched()</code> callback will be invoked again, each time being passed the newly matched rules.</p>
+      <p>If the media value changes and some rules no longer match, the <code>undoUnmatched()</code> callback is invoked and passed a list of rules that used to match but now don&#39;t.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h1>Why Should I Use It?</h1>
+      <p>Pretty much every single CSS polyfill needs to download and parse all of the stylesheets and if the polyfill supports media queries it also needs to add media listeners (or a window resize listener in old browsers). If you include more than one polyfill on your page, that starts to get incredibly expensive and wasteful.</p>
+      <p>Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook into, so all the hard work happens only once at most. Downloaded stylesheets are parsed and stored in a cache so additional instances don't do double work. And if the same media queries are needed for two separate polyfill instances, only one event listener is added.</p>
+    </div>
+  </section>
+
+  <section class="striped">
+    <div class="container">
+      <h1>Live Demos</h1>
+      <div class="grid">
+        <div class="col-1-2">
+          <div class="demo">
+            <h3>Position Sticky</h3> <a href="#">View Demo</a>
+            <p>"Sticky" is a new CSS position value to allow elements to stick in place only after a specified scroll position is met. This is most commonly used for navigation elements to stick in place after you start scrolling down the page.</p>
+            <p></p>
+          </div>
+        </div>
+        <div class="col-1-2">
+          <div class="demo">
+            <h3>Local Links</h3> <a href="#">View Demo</a>
+            <p>Local links (<code>:local-link</code>) is a new CSS pseudo-class for styling anchor tags that point to URLs within the current domain.</p>
+            <p></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h1>API</h1>
+      <p>The Polyfill.js API consists of three public object: <a href="#polyfill">Polyfill</a>, <a href="#ruleset">Ruleset</a>, and <a href="#rule">Rule</a>. Only Polyfill is accessible in the global scope, the others are passed as arguments to callback functions.</p>
+      <h2 id="polyfill">The Polyfill Object</h2>
+      <div class="Function">
+        <code class="Function-signature">Polyfill(keywords, [options])</code>
+        <p>Create a new polyfill object. <em>(Note: the <code>new</code> operator is optional.)</em></p>
+        <p class="Function-arg"><strong>keywords</strong> {Object}: An object map containing an array of strings to match against CSS rules. The possible object keys are <code>declarations</code>, <code>selectors</code>, or <code>media</code>, and the values are an array or keywords. Keywords strings are literal matches, but you may also include an asterisk character which will match any number of characters (equivalent to the following Regex: <code>/.*/</code>).</p>
+        <p class="Function-arg"><strong>options</strong> {Object} <em>(optional)</em>: An object map containing an array of stylesheet IDs to include or exclude from the Polyfill. <code>include</code> and <code>exclude</code> cannot be used together. If both are passed, <code>include</code> is favored.</p>
+        <p class="Function-returns"><strong>returns</strong> {Polyfill} the newly created instance</p>
+
+<pre class="Function-example"><code class="language-javascript">// create a polyfill for some CSS pseudo-classes
+var p1 = Polyfill({
+  selectors: [":local-link", ":nth-of-type"],
+  declarations: ["*border-radius:*", "position:sticky", "display:*flex"]
+}, {
+  exclude: ["third-party-css"]
+})
+
+// create a polyfill for the flex display property
+var p2 = Polyfill({
+  declarations: ["display:*flex"]
+}, {
+  include: ["flexbox", "box"]
+})
+</code></pre>
+      </div>
+
+      <div class="Function">
+        <code class="Function-signature">.doMatched(callback)</code>
+        <p>Register a callback to be invoked whenever new rules match the passed keywords. This happens as soon as the page is loaded as well as when media changes. The callback is invoked with a <a href="#ruleset">Ruleset</a> object that contains all of the newly matched CSS rules.</p>
+        <p class="Function-arg"><strong>callback</strong> {Function}: the function called</p>
+        <p class="Function-returns"><strong>returns</strong> {Polyfill} the current <a href="#polyfill">Polyfill</a> instance</p>
+<pre class="Function-example"><code class="language-javascript">polyfill.doMatched(function(rules) {
+  // do somthing...
+})</code></pre>
+      </div>
+
+      <div class="Function">
+        <code class="Function-signature">.undoUnmatched(callback)</code>
+        <p>Register a callback function to be invoked whenever previously matches rules no longer match. This could be because the media changed or the polyfill was destroyed.</p>
+        <p class="Function-arg"><strong>callback</strong> {Function}: A callback function. Each invocation is passed a <a href="#ruleset">Ruleset</a> object which contains all of the newly matched CSS rules.</p>
+        <p class="Function-returns"><strong>returns</strong> {Polyfill} the current <a href="#polyfill">Polyfill</a> instance</p>
+<pre class="Function-example"><code class="language-javascript">polyfill.undoUnmatched(function(rules) {
+  // do somthing...
+})</code></pre>
+      </div>
+
+
+      <div class="Function">
+        <code class="Function-signature">.getMatches()</code>
+        <p>Fetch all the CSS rules that match the current media. <em>(Note: rules that are not in a media block always matches and are returned as well.)</em></p>
+        <p class="Function-returns"><strong>returns</strong> {Ruleset} a <a href="#ruleset">Ruleset</a> object containing all of the currently matches rules.</p>
+        <pre class="Function-example"><code class="language-javascript">var matches = pf.getMatches()</code></pre>
+      </div>
+
+      <div class="Function">
+        <code class="Function-signature">.destroy()</code>
+        <p>Destroy the polyfill instance by removing any media listeners and invoking the undoMatched callback.</p>
+        <p class="Function-returns"><strong>returns</strong> {undefined}</p>
+        <pre class="Function-example"><code class="language-javascript">polyfill.destroy()</code></pre>
+      </div>
+
+      <h2 id="ruleset">The Ruleset Object</h2>
+
+      <div class="Function">
+        <code class="Function-signature">.each(callback)</code>
+        <p>Iterates over a Ruleset invoking a callback for each Rule object in the Ruleset. Callbacks are invoked with the Rule object as their only arguments.</p>
+        <p class="Function-arg"><strong>callback</strong> {Function}: the function called per iteration</p>
+        <p class="Function-returns"><strong>returns</strong> {Ruleset} the current instance</p>
+
+<pre class="Function-example"><code class="language-javascript">rules.each(function(rule) {
+  // do something...
+})</code></pre>
+
+      </div>
+
+      <div class="Function">
+        <code class="Function-signature">.at(index)</code>
+        <p>Returns the <code>Rule</code> instance at the specified index.</p>
+        <p class="Function-arg"><strong>index</strong> (Number): the index of the rule to return</p>
+        <p class="Function-returns"><strong>returns</strong> {Rule} the Rule object at the specified index.</p>
+        <pre class="Function-example"><code class="language-javascript">var rule = rules.at(0)</code></pre>
+      </div>
+
+      <div class="Function">
+        <code class="Function-signature">.size()</code>
+        <p>Returns the number of rules in the Ruleset</p>
+        <p class="Function-returns"><strong>returns</strong> {Number}</p>
+        <pre class="Function-example"><code class="language-javascript">var length = rules.size()</code></pre>
+      </div>
+
+      <h2 id="rule">The Rule Object</h2>
+
+      <div class="Function">
+        <code class="Function-signature">.getSelectors()</code>
+        <p>Returns the full selector as a string. If the rule contains more than one selector they are join with a comma.</p>
+        <p class="Function-returns"><strong>returns</strong> {String} the full selector</p>
+        <pre class="Function-example"><code class="language-javascript">var selector = rule.getSelectors()</code></pre>
+      </div>
+
+      <div class="Function">
+        <code class="Function-signature">.getDeclaration()</code>
+        <p>Returns an object map of the CSS declaration. <em>(Note: since an object cannot have duplicate keys, duplicate CSS property values ignored. If you need to access duplicate CSS values, you can manually inspect the <code>Rule</code> instance for the raw data.)</em></p>
+        <p class="Function-returns"><strong>returns</strong> {Object} the rule&#39;s declaration</p>
+        <pre class="Function-example"><code class="language-javascript">var declaration = rule.getDeclaration()</code></pre>
+      </div>
+
+      <div class="Function">
+        <code class="Function-signature">.getMedia()</code>
+        <p>Returns a string of the media query value. If the rule contains more than one media query value (e.g. a nested rule) the media values are joined on <code>and</code>.</p>
+        <p class="Function-returns"><strong>returns</strong> {String} the full media query</p>
+        <pre class="Function-example"><code class="language-javascript">var media = rule.getMedia()</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h1>A Complete Example</h1>
+      <p>Putting it all together, this is all the code you&#39;d need to write a functioning polyfill for the new CSS property <code>:local-link</code>, which allows you to style links based on whether their <code>href</code> attribute points to a URL on the same domain <em>(ok, there's a little more to it than that, but you get the idea)</em>.</p>
+      <p><strong>Note:</strong> This example uses jQuery:</p>
+
+<pre><code class="language-javascript">// First write a RegExp to match local links
+var reURL = /^(?:(https?:)\/\/)?((?:[0-9a-z\.\-]+)(?::(?:\d+))?)/
+
+// Then extend jQuery&#39;s selector engine to target local links
+$.extend($.expr[&#39;:&#39;], {
+  "local-link": function(el) {
+    var url = el.href.match(reURL)
+      , protocol = url[1]
+      , host = url[2]
+    return protocol == location.protocol &amp;&amp; host == location.host
+  }
+})
+
+// Now just let Polyfill.js do the rest
+Polyfill({selectors:[":local-link"]})
+  .doMatched(function(rules) {
+    rules.each(function(rule) {
+      $(rule.getSelectors()).css(rule.getDeclaration())
+    })
+  })
+  .undoUnmatched(function(rules) {
+    rules.each(function(rule) {
+      $(rule.getSelectors()).removeAttr("style")
+    })
+  })
+</code></pre>
+
+    </div>
+  </section>
+
+
+  <script src="/lib/highlight.js"></script>
+  <script>hljs.initHighlightingOnLoad()</script>
+
+</body>
+</html>

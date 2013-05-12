@@ -1,0 +1,58 @@
+.Button {
+  // @include background-image(linear-gradient(top, hsl(0,0%,28%), hsl(0,0%,17%)));
+  @include background-image(linear-gradient(top, hsl(21, 20%, 23%),hsl(12, 20%, 14%)));
+  @include border-radius(3px);
+  @include box-shadow(inset 0 1px 0 rgba(255,255,255,0.2), 0 .25em .5em rgba(0,0,0,0.4));
+  // @include transition(background-position 0.15s ease-out, box-shadow 0.15s ease-out);
+  // @include transition(all 0.15s ease-out);
+  display: inline-block;
+  margin: 0 0.667em 0 0;
+  padding: 1.2em 2.8em;
+  background-color: #f0f0f0;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration: none;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+  &:focus {
+    outline: thin dotted #666;
+    text-decoration:none;
+  }
+  &:hover, &:active {
+    text-decoration:none;
+  }
+}
+
+.Button--action {
+  @include background-image(linear-gradient(top, hsl(21, 100%, 50%), hsl(12, 95%, 45%)));
+  @include box-shadow(inset 0 1px 0 rgba(255,255,255,0.4), 0 .25em .5em rgba(0,0,0,0.4));
+  background-color: hsl(16, 95%, 47%);
+}
+
+.Button--small {
+  font-size: 0.875em;
+  padding: 0.4em 1em;
+}
+
+.btn {
+  @include border-radius(4px);
+  display: inline-block;
+  padding: 0.75em 1.5em;
+  background-color: hsl(21, 100%, 50%);
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font-size: .8em;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration: none;
+  &:focus {
+    outline: thin dotted #666;
+    text-decoration:none;
+  }
+  &:hover, &:active {
+    text-decoration:none;
+  }
+}

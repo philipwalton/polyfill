@@ -4,7 +4,7 @@
  * Copyright (c) 2013 Philip Walton <http://philipwalton.com>
  * Released under the MIT license
  *
- * Date: 2013-05-04
+ * Date: 2013-05-11
  */
 ;(function(window, document, undefined){
 
@@ -37,6 +37,7 @@ function inArray(target, items) {
   }
   return false
 }
+
 
 /**
  * Determine if a method is support natively by the browser

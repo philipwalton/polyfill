@@ -1,0 +1,36 @@
+.Function {
+  margin-bottom: 2em;
+}
+
+.Function-signature {
+  display: block;
+  margin-bottom: 1em;
+  padding: 0;
+  background-color: transparent;
+  color: #000;
+  font: 1.3em $font-family-monospaced;
+}
+
+.Function-arg, .Function-returns {
+  position: relative;
+  padding-left: 2em;
+  &:before {
+    content: "\25E6"; //"\00BB";
+    position: absolute;
+    top: .05em;
+    left: .5em;
+    width: 1em;
+    color: #000;
+    font-size: .85em;
+    text-align: right;
+  }
+}
+
+.Function-returns:before {
+  content: "\21B5";
+  top: .3em;
+}
+
+.Function-example {
+  // margin-left: 2em;
+}

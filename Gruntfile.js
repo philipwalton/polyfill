@@ -71,6 +71,20 @@ module.exports = function(grunt) {
         files: ["Gruntfile.js"],
         tasks: ["default"],
       }
+    },
+    shell: {
+      checkoutGhPages: {
+        command: "git checkout gh-pages"
+      },
+      rebaseMaster: {
+        command: "git rebase master"
+      },
+      pushGhPages: {
+        command: "git push origin gh-pages"
+      },
+      checkoutMaster: {
+        command: "git rebase master"
+      }
     }
   });
 
@@ -80,8 +94,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-contrib-compass");
+  grunt.loadNpmTasks('grunt-shell');
 
   // Default task.
   grunt.registerTask("default", ["compass", "concat", "jshint", "uglify"]);
+
+  // Push gh-pages branch to Github Pages
+  grunt.registerTask("gh-pages", ["shell:checkoutGhPages", "shell:rebaseMaster", "shell:pushGhPages", "shell:checkoutMaster"]);
 
 };

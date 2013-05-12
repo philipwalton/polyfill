@@ -30,7 +30,14 @@
       <h1>Introduction</h1>
       <p class="promo">Polyfill.js is library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.</p>
       <p>For most CSS polyfills, the hardest part is not the polyfill logic, it's the boring stuff, the stuff that the browser is supposed to do for you: downloading the CSS, parsing it, and finding the parts you care about. If the CSS contains media queries, you need to deal with them, detect when they apply, and manually listen for changes.</p>
+
       <p>It's a lot of work, but Polyfill.js does the majority of it for you. And it's only <strong>3.6KB</strong> minified and gzipped!</p>
+
+      <!--
+      <p>Pretty much every single CSS polyfill needs to download and parse all of the stylesheets and if the polyfill supports media queries it also needs to add media listeners (or a window resize listener in old browsers). If you include more than one polyfill on your page, that starts to get incredibly expensive and wasteful.</p>
+      <p>Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook into, so all the hard work happens only once at most. Downloaded stylesheets are parsed and stored in a cache so additional instances don't do double work. And if the same media queries are needed for two separate polyfill instances, only one event listener is added.</p
+      -->
+
     </div>
   </section>
 
@@ -65,14 +72,6 @@
       <p>Once you have your polyfill instance, you simply register two callback: <code>doMatched()</code> and <code>undoUnmatched()</code>. When the page first loads and Polyfill.js has done all its work behind the scenes, the <code>doMatched()</code> callback is invoked and is passed a list of CSS rules that contain the specified keywords and match the current media.</p>
       <p>If the media values change (usually by resizing the browser window) and new rules match, the <code>doMatched()</code> callback will be invoked again, each time being passed the newly matched rules.</p>
       <p>If the media value changes and some rules no longer match, the <code>undoUnmatched()</code> callback is invoked and passed a list of rules that used to match but now don&#39;t.</p>
-    </div>
-  </section>
-
-  <section>
-    <div class="container">
-      <h1>Why Should I Use It?</h1>
-      <p>Pretty much every single CSS polyfill needs to download and parse all of the stylesheets and if the polyfill supports media queries it also needs to add media listeners (or a window resize listener in old browsers). If you include more than one polyfill on your page, that starts to get incredibly expensive and wasteful.</p>
-      <p>Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook into, so all the hard work happens only once at most. Downloaded stylesheets are parsed and stored in a cache so additional instances don't do double work. And if the same media queries are needed for two separate polyfill instances, only one event listener is added.</p>
     </div>
   </section>
 

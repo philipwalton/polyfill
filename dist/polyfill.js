@@ -61,12 +61,6 @@ var isLocalURL = (function() {
   }
 }())
 
-
-
-
-
-
-
 var supports = {
   // true with either native support or a polyfil, we don't care which
   matchMedia: window.matchMedia && window.matchMedia( "only all" ).matches,

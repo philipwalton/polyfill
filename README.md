@@ -45,7 +45,7 @@ If the media value changes and some rules no longer match, the `undoUnmatched()`
 
 Polyfill.js includes a [Jasmine](http://pivotal.github.io/jasmine/) test suite and uses an embedded `iframe` to test the media queries and resize events. Polyfill.js has been tested on the latest Chrome, Firefox, Safari, Opera, and IE 7-10.
 
-If you use a browser other than these, please [run the test suite in your browser](http://philipwalton.github.io/polyfill/spec/runner.html) and report back the results.
+If you use a browser other than these, please [run the test suite in your browser](http://philipwalton.github.io/polyfill/spec/) and report back the results.
 
 ## API
 

@@ -404,7 +404,9 @@ table {
   border-spacing: 0;
 }
 
-/* line 6, ../_sass/demos.scss */
-h1, h2, h3, h4 {
-  margin-top: 0;
+/* line 1, ../_sass/layout/_site.scss */
+.container {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 0 3em;
 }

@@ -1,3 +1,7 @@
+h1, h2, h3 {
+  margin-top: 0;
+}
+
 .header {
   padding: 4em 0 3em;
   background-color: brown;

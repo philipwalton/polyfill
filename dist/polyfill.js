@@ -975,13 +975,16 @@ Rule.prototype.getMedia = function() {
   return this._rule.media.join(" and ")
 }
 
-function Polyfill(keywords, options, callback) {
+function Polyfill(options) {
 
-  if (!(this instanceof Polyfill)) return new Polyfill(keywords, options, callback)
+  if (!(this instanceof Polyfill)) return new Polyfill(options)
 
   // set the options
-  this._keywords = keywords
-  this._options = options || {}
+  this._options = options
+
+  // allow the keywords option to be the only object passed
+  if (!options.keywords) this._options = { keywords: options }
+
   this._promise = []
 
   // then do the stuff
@@ -1184,8 +1187,7 @@ Polyfill.prototype._filterCSSByKeywords = function() {
           rules = rules.concat(stylesheet.rules)
         }
       }
-      this._filteredRules = StyleManager.filter(rules, this._keywords)
-      console.log(this._filteredRules)
+      this._filteredRules = StyleManager.filter(rules, this._options.keywords)
     }
   )
 }

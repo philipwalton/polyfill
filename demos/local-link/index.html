@@ -4,16 +4,60 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Polyfill.js Demo &mdash; :local-link</title>
-    <link type="text/css" href="style.css" rel="stylesheet">
+    <link type="text/css" href="../../css/demos.css" rel="stylesheet">
+    <link id="local-link" type="text/css" href="style.css" rel="stylesheet">
   </head>
   <body>
-    <p>Here is a paragraph with a <a href="https://example.com">link</a> and a <a href="local.html">local-link</a> inside of it.</p>
-    <p>Here is a paragraph with a <a href="http://www.facebook.com">link</a> and a <a href="../foobar.html">local-link</a> inside of it.</p>
-    <p>Here is a paragraph with a <a href="http://twitter.com">link</a> and a <a href="../">local-link</a> inside of it.</p>
 
-    <!-- The local-link polyfill require jQuery -->
-    <script src="../lib/jquery.js"></script>
-    <script src="../dist/polyfill.js"></script>
+    <div class="container">
+
+      <h1>Demo: The local-link pseudo-class</h1>
+
+      <p>From the W3C spec:</p>
+
+      <blockquote>
+        <p>The :local-link pseudo-class allows authors to style hyperlinks based on the users current location within a site and to differentiate site-internal versus site-external links.</p>
+        <p>The (non-functional) :local-link pseudo-class represents an element that is the source anchor of a hyperlink whose target's absolute URL matches the element's own document URL. Any fragment identifiers are stripped before matching the document's URL against the link's URL; otherwise all portions of the URL are considered.</p>
+      </blockquote>
+
+      <h2>Links</h2>
+      <p>Local link should appear blue while external links should appear red (danger!)</p>
+      <p>When the window is smaller than 700px, local links should also be bold and with a yellow backgrond.</p>
+      <ul>
+        <li><a href="http://example.com">Alpha</a></li>
+        <li><a href="../foo.html">Bravo</a></li>
+        <li><a href="http://example.com">Charlie</a></li>
+        <li><a href="bar.html">Delta</a></li>
+        <li><a href="http://example.com">Echo</a></li>
+        <li><a href="/fizz.html">Foxtrot</a></li>
+        <li><a href="http://example.com">Golf</a></li>
+        <li><a href="fizz/buzz.html">Hotel</a></li>
+        <li><a href="http://example.com">India</a></li>
+        <li><a href="foo/bar/../baz.html">Juliet</a></li>
+      </ul>
+
+      <h3>The CSS</h3>
+
+<pre><code>a {
+  color: blue;
+}
+
+a:local-link {
+  color: green;
+}
+
+@media (max-width: 700px) {
+  a:local-link {
+    background-color: yellow;
+    font-weight: bold;
+  }
+}
+</code></pre>
+
+    </div>
+
+    <script src="../../lib/jquery.js"></script>
+    <script src="../../dist/polyfill.js"></script>
     <script src="polyfill.local-link.js"></script>
 
   </body>

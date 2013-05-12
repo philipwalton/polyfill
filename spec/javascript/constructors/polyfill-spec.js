@@ -2,8 +2,13 @@ describe("Polyfill", function() {
 
   var iframe = window.top.document.getElementById("test-frame")
     , polyfill
-    , keywords = {selectors: [".selector"], declarations: ["prop:*"]}
-    , options = {include: ["simple-test"]}
+    , options = {
+        include: ["simple-test"],
+        keywords: {
+          selectors: [".selector"],
+          declarations: ["prop:*"]
+        }
+      }
     , matchedCount = 0
     , unmatchedCount = 0
     , matchedResults = []
@@ -45,12 +50,11 @@ describe("Polyfill", function() {
     })
   }
 
-  function createPolyfill(k, o) {
+  function createPolyfill(o) {
     runs(function() {
-      k || (k = keywords)
       o || (o = options)
       reset()
-      polyfill = Polyfill(k, o)
+      polyfill = Polyfill(o)
         .doMatched(doMatched)
         .undoUnmatched(undoUnmatched)
       waitsFor(function() { return matchedCount > 0 })
@@ -73,10 +77,12 @@ describe("Polyfill", function() {
   describe("keywords:", function() {
 
     it("can filter rules by selector keywords", function() {
-      createPolyfill(
-        {selectors:[":nth-of-type", ".flex"]},
-        {include: ["filter-test"]}
-      )
+      createPolyfill({
+        include: ["filter-test"],
+        keywords: {
+          selectors:[":nth-of-type", ".flex"]
+        }
+      })
       runs(function() {
         expect(polyfill._filteredRules.length).toBe(3)
         expect(polyfill._filteredRules[0].selectors).toEqual(["p:nth-of-type(2n-1)", "pre:last-child", "code"])
@@ -86,10 +92,12 @@ describe("Polyfill", function() {
     })
 
     it("can filter rules by declaration keywords", function() {
-      createPolyfill(
-        {declarations:["display:*flex", "*flex:*"]},
-        {include: ["filter-test"]}
-      )
+      createPolyfill({
+        include: ["filter-test"],
+        keywords: {
+          declarations:["display:*flex", "*flex:*"]
+        }
+      })
       runs(function() {
         expect(polyfill._filteredRules.length).toBe(2)
         expect(polyfill._filteredRules[0].declarations).toEqual([
@@ -103,10 +111,12 @@ describe("Polyfill", function() {
     })
 
     it("includes stylesheet media attributes in each filtered rule's media list", function() {
-      createPolyfill(
-        {declarations:["*:*"]},
-        {include: ["media-test"]}
-      )
+      createPolyfill({
+        include: ["media-test"],
+        keywords: {
+          declarations:["*:*"]
+        }
+      })
       runs(function() {
         expect(polyfill._filteredRules.length).toBe(1)
         expect(polyfill._filteredRules[0].media).toEqual(["max-width: 800px"])
@@ -114,10 +124,12 @@ describe("Polyfill", function() {
     })
 
     it("ignores stylesheets with a `print` media attribute", function() {
-      createPolyfill(
-        {declarations:["*:*"]},
-        {include: ["media-test", "media-print-test"]}
-      )
+      createPolyfill({
+        include: ["media-test", "media-print-test"],
+        keywords: {
+          declarations:["*:*"]
+        }
+      })
       runs(function() {
         expect(polyfill._filteredRules.length).toBe(1)
         expect(polyfill._filteredRules[0].selectors).toEqual(["#media"])
@@ -125,10 +137,12 @@ describe("Polyfill", function() {
     })
 
     it("ignores `all` and `screen` media attributes", function() {
-      createPolyfill(
-        {declarations:["*:*"]},
-        {include: ["media-screen-test", "media-all-test"]}
-      )
+      createPolyfill({
+        include: ["media-screen-test", "media-all-test"],
+        keywords: {
+          declarations:["*:*"]
+        }
+      })
       runs(function() {
         expect(polyfill._filteredRules.length).toBe(2)
         expect(polyfill._filteredRules[0].media).not.toBeDefined()
@@ -148,20 +162,24 @@ describe("Polyfill", function() {
     })
 
     it("can exlude certain stylesheets from being downloaded", function() {
-      createPolyfill(
-        {declarations: ["prop:*"]},
-        {exclude:["exclude-test1", "exclude-test2"]}
-      )
+      createPolyfill({
+        exclude:["exclude-test1", "exclude-test2"],
+        keywords: {
+          declarations: ["prop:*"]
+        }
+      })
       runs(function() {
         expect(polyfill._stylesheets.length).toBe(10)
       })
     })
 
     it("can limit the downloads to only included stylesheets", function() {
-      createPolyfill(
-        {declarations: ["prop:*"]},
-        {include:["include-test1", "include-test2"]}
-      )
+      createPolyfill({
+        include:["include-test1", "include-test2"],
+        keywords: {
+          declarations: ["prop:*"]
+        }
+      })
       runs(function() {
         expect(polyfill._stylesheets.length).toBe(2)
       })
@@ -175,7 +193,7 @@ describe("Polyfill", function() {
 
       setFrame(200)
       runs(function() {
-        polyfill = Polyfill(keywords, options)
+        polyfill = Polyfill(options)
           .doMatched(doMatched)
           .undoUnmatched(undoUnmatched)
         waitsFor(function() { return matchedCount > 0 })
@@ -197,7 +215,7 @@ describe("Polyfill", function() {
 
     function createPolyfill() {
       runs(function() {
-        polyfill = Polyfill(keywords, options)
+        polyfill = Polyfill(options)
           .doMatched(doMatched)
           .undoUnmatched(undoUnmatched)
         waitsFor(function() { return matchedCount > 0 })
@@ -212,7 +230,6 @@ describe("Polyfill", function() {
     it("can create a new Polyfill instance with all the correct properties", function() {
       createPolyfill()
       runs(function() {
-        expect(polyfill._keywords).toBeDefined()
         expect(polyfill._options).toBeDefined()
         expect(polyfill._stylesheets).toBeDefined()
         expect(polyfill._filteredRules).toBeDefined()
@@ -290,20 +307,28 @@ describe("Polyfill", function() {
     var polyfill1
       , polyfill2
       , polyfill3
-      , keywords1 = {declarations: ["foo:*"]}
-      , keywords2 = {declarations: ["bar:*"]}
-      , keywords3 = {declarations: ["fizz:*"]}
-      , options = {include: ["complex-test"]}
+      , options1 = {
+          include: ["complex-test"],
+          keywords: { declarations: ["foo:*"] }
+        }
+      , options2 = {
+          include: ["complex-test"],
+          keywords: { declarations: ["bar:*"] }
+        }
+      , options3 = {
+          include: ["complex-test"],
+          keywords: { declarations: ["fizz:*"] }
+        }
 
     function createPolyfills() {
       runs(function() {
-        polyfill1 = Polyfill(keywords1, options)
+        polyfill1 = Polyfill(options1, options)
           .doMatched(doMatched)
           .undoUnmatched(undoUnmatched)
-        polyfill2 = Polyfill(keywords2, options)
+        polyfill2 = Polyfill(options2)
           .doMatched(doMatched)
           .undoUnmatched(undoUnmatched)
-        polyfill3 = Polyfill(keywords3, options)
+        polyfill3 = Polyfill(options3)
           .doMatched(doMatched)
           .undoUnmatched(undoUnmatched)
         waitsFor(function() { return matchedCount === 3 })
@@ -321,7 +346,6 @@ describe("Polyfill", function() {
       createPolyfills()
       runs(function() {
         // polyfill1
-        expect(polyfill1._keywords).toBeDefined()
         expect(polyfill1._options).toBeDefined()
         expect(polyfill1._stylesheets).toBeDefined()
         expect(polyfill1._filteredRules).toBeDefined()
@@ -330,7 +354,6 @@ describe("Polyfill", function() {
         expect(polyfill1._doMatched).toBeDefined()
         expect(polyfill1._undoUnmatched).toBeDefined()
         // polyfill2
-        expect(polyfill2._keywords).toBeDefined()
         expect(polyfill2._options).toBeDefined()
         expect(polyfill2._stylesheets).toBeDefined()
         expect(polyfill2._filteredRules).toBeDefined()
@@ -339,7 +362,6 @@ describe("Polyfill", function() {
         expect(polyfill2._doMatched).toBeDefined()
         expect(polyfill2._undoUnmatched).toBeDefined()
         // polyfill3
-        expect(polyfill3._keywords).toBeDefined()
         expect(polyfill3._options).toBeDefined()
         expect(polyfill3._stylesheets).toBeDefined()
         expect(polyfill3._filteredRules).toBeDefined()

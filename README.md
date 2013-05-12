@@ -47,3 +47,6 @@ Polyfill.js includes a [Jasmine](http://pivotal.github.io/jasmine/) test suite a
 
 If you use a browser other than these, please [run the test suite in your browser](http://philipwalton.github.io/polyfill/spec/runner.html) and report back the results.
 
+## API
+
+The full API can be found on [project home page](http://philipwalton.github.io/polyfill/#api).

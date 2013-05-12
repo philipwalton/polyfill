@@ -37,3 +37,18 @@ function inArray(target, items) {
 function isNative(fn) {
   return reNative.test(fn)
 }
+
+/**
+ * Determine if a URL is local to the document origin
+ * Inspired form Respond.js
+ * https://github.com/scottjehl/Respond/blob/master/respond.src.js#L90-L91
+ */
+var isLocalURL = (function() {
+  var base = document.getElementsByTagName("base")[0]
+    , reProtocol = /^([a-zA-Z:]*\/\/)/
+  return function(url) {
+    var isLocal = (!reProtocol.test(url) && !base)
+      || url.replace(RegExp.$1, "").split("/")[0] === location.host
+    return isLocal
+  }
+}())

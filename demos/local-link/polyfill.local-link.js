@@ -4,7 +4,7 @@
 
   $.extend($.expr[':'], {
     "local-link": function(el) {
-      var url = el.href.match(reURL)
+      var url = reURL.exec(el.href)
         , protocol = url[1]
         , host = url[2]
       return protocol == location.protocol && host == location.host

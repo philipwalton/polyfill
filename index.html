@@ -237,13 +237,13 @@ var p3 = Polyfill({
       <p>Putting it all together, this is all the code you'd need to write a functioning polyfill for the new CSS property <code>:local-link</code>, which allows you to style links based on whether their <code>href</code> attribute points to a URL on the same domain <em>(ok, there's a little more to it than that, but you get the idea)</em>.</p>
       <p><strong>Note:</strong> This example uses jQuery:</p>
 
-<pre><code class="language-javascript">// First write a RegExp to match local links
+<pre><code class="language-javascript">// First write a RegExp to match URL parts
 var reURL = /^(?:(https?:)\/\/)?((?:[0-9a-z\.\-]+)(?::(?:\d+))?)/
 
 // Then extend jQuery's selector engine to target local links
 $.extend($.expr[':'], {
   "local-link": function(el) {
-    var url = el.href.match(reURL)
+    var url = reURL.exec(el.href)
       , protocol = url[1]
       , host = url[2]
     return protocol == location.protocol &amp;&amp; host == location.host

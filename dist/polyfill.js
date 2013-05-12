@@ -46,6 +46,27 @@ function isNative(fn) {
   return reNative.test(fn)
 }
 
+/**
+ * Determine if a URL is local to the document origin
+ * Inspired form Respond.js
+ * https://github.com/scottjehl/Respond/blob/master/respond.src.js#L90-L91
+ */
+var isLocalURL = (function() {
+  var base = document.getElementsByTagName("base")[0]
+    , reProtocol = /^([a-zA-Z:]*\/\/)/
+  return function(url) {
+    var isLocal = (!reProtocol.test(url) && !base)
+      || url.replace(RegExp.$1, "").split("/")[0] === location.host
+    return isLocal
+  }
+}())
+
+
+
+
+
+
+
 var supports = {
   // true with either native support or a polyfil, we don't care which
   matchMedia: window.matchMedia && window.matchMedia( "only all" ).matches,
@@ -1099,6 +1120,8 @@ Polyfill.prototype._getStylesheets = function() {
       if (link = document.getElementById(id)) {
         // ignore print stylesheets
         if (link.media && link.media == "print") continue
+        // ignore non-local stylesheets
+        if (!isLocalURL(link.href)) continue
         stylesheet = { href: link.href }
         link.media && (stylesheet.media = link.media)
         stylesheets.push(stylesheet)
@@ -1115,6 +1138,7 @@ Polyfill.prototype._getStylesheets = function() {
         link.rel
         && (link.rel == "stylesheet")
         && (link.media != "print") // ignore print stylesheets
+        && (isLocalURL(link.href)) // only request local stylesheets
         && (!inArray(link.id, ids))
       ) {
         stylesheet = { href: link.href }

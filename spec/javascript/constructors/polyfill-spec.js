@@ -74,7 +74,38 @@ describe("Polyfill", function() {
     document.documentElement.style.overflow = "auto"
   })
 
-  describe("keywords:", function() {
+  describe("options:", function() {
+
+    it("defaults to downloading all stylesheets (expect print stylesheets) if no options are passed", function() {
+      createPolyfill({declarations: ["prop:*"]}, {})
+      runs(function() {
+        expect(polyfill._stylesheets.length).toBe(12)
+      })
+    })
+
+    it("can exlude certain stylesheets from being downloaded", function() {
+      createPolyfill({
+        exclude:["exclude-test1", "exclude-test2"],
+        keywords: {
+          declarations: ["prop:*"]
+        }
+      })
+      runs(function() {
+        expect(polyfill._stylesheets.length).toBe(10)
+      })
+    })
+
+    it("can limit the downloads to only included stylesheets", function() {
+      createPolyfill({
+        include:["include-test1", "include-test2"],
+        keywords: {
+          declarations: ["prop:*"]
+        }
+      })
+      runs(function() {
+        expect(polyfill._stylesheets.length).toBe(2)
+      })
+    })
 
     it("can filter rules by selector keywords", function() {
       createPolyfill({
@@ -150,38 +181,16 @@ describe("Polyfill", function() {
       })
     })
 
-  })
-
-  describe("options:", function() {
-
-    it("defaults to downloading all stylesheets (expect print stylesheets) if no options are passed", function() {
-      createPolyfill({declarations: ["prop:*"]}, {})
-      runs(function() {
-        expect(polyfill._stylesheets.length).toBe(12)
-      })
-    })
-
-    it("can exlude certain stylesheets from being downloaded", function() {
+    it("ignores stylesheets from different domains", function() {
       createPolyfill({
-        exclude:["exclude-test1", "exclude-test2"],
+        include: ["media-test", "external-domain"],
         keywords: {
-          declarations: ["prop:*"]
+          declarations:["*:*"]
         }
       })
       runs(function() {
-        expect(polyfill._stylesheets.length).toBe(10)
-      })
-    })
-
-    it("can limit the downloads to only included stylesheets", function() {
-      createPolyfill({
-        include:["include-test1", "include-test2"],
-        keywords: {
-          declarations: ["prop:*"]
-        }
-      })
-      runs(function() {
-        expect(polyfill._stylesheets.length).toBe(2)
+        expect(polyfill._filteredRules.length).toBe(1)
+        expect(polyfill._filteredRules[0].selectors).toEqual(["#media"])
       })
     })
 

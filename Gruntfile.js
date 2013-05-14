@@ -96,6 +96,6 @@ module.exports = function(grunt) {
   grunt.registerTask("default", ["compass", "concat", "jshint", "uglify"]);
 
   // Push gh-pages branch to Github Pages
-  grunt.registerTask("gh-pages", ["default", "shell:gh-pages"]);
+  grunt.registerTask("gh-pages", ["shell:gh-pages"]);
 
 };

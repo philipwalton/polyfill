@@ -161,11 +161,19 @@ Polyfill.prototype._getStylesheets = function() {
  */
 Polyfill.prototype._downloadStylesheets = function() {
   var self = this
+    , sc = this._options.stylesheetContents
     , stylesheet
     , urls = []
     , i = 0
   while (stylesheet = this._stylesheets[i++]) {
-    urls.push(stylesheet.href)
+    if(sc && sc[stylesheet.href]) {
+      stylesheet.text = sc[stylesheet.href];
+    } else {
+      urls.push(stylesheet.href)
+    }
+  }
+  if(!urls.length) {
+	  this._resolve();
   }
   DownloadManager.request(urls, function(stylesheets) {
     var stylesheet

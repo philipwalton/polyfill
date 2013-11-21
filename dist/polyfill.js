@@ -4,7 +4,7 @@
  * Copyright (c) 2013 Philip Walton <http://philipwalton.com>
  * Released under the MIT license
  *
- * Date: 2013-05-12
+ * Date: 2013-11-21
  */
 ;(function(window, document, undefined){
 
@@ -1150,11 +1150,19 @@ Polyfill.prototype._getStylesheets = function() {
  */
 Polyfill.prototype._downloadStylesheets = function() {
   var self = this
+    , sc = this._options.stylesheetContents
     , stylesheet
     , urls = []
     , i = 0
   while (stylesheet = this._stylesheets[i++]) {
-    urls.push(stylesheet.href)
+    if(sc && sc[stylesheet.href]) {
+      stylesheet.text = sc[stylesheet.href];
+    } else {
+      urls.push(stylesheet.href)
+    }
+  }
+  if(!urls.length) {
+	  this._resolve();
   }
   DownloadManager.request(urls, function(stylesheets) {
     var stylesheet

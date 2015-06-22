@@ -1,10 +1,10 @@
 /*!
  * Polyfill.js - v0.1.0
  *
- * Copyright (c) 2013 Philip Walton <http://philipwalton.com>
+ * Copyright (c) 2015 Philip Walton <http://philipwalton.com>
  * Released under the MIT license
  *
- * Date: 2013-05-12
+ * Date: 2015-06-21
  */
 ;(function(window, document, undefined){
 
@@ -1104,6 +1104,8 @@ Polyfill.prototype._getStylesheets = function() {
     , ids
     , link
     , links
+    , inline
+    , inlines
     , stylesheet
     , stylesheets = []
 
@@ -1112,6 +1114,12 @@ Polyfill.prototype._getStylesheets = function() {
     ids = this._options.include
     while (id = ids[i++]) {
       if (link = document.getElementById(id)) {
+        // if this tag is an inline style
+        if (link.nodeName === "STYLE") {
+          stylesheet = { text: link.textContent }
+          stylesheets.push(stylesheet)
+          continue
+        }
         // ignore print stylesheets
         if (link.media && link.media == "print") continue
         // ignore non-local stylesheets
@@ -1139,6 +1147,12 @@ Polyfill.prototype._getStylesheets = function() {
         link.media && (stylesheet.media = link.media)
         stylesheets.push(stylesheet)
       }
+    }
+    inlines = document.getElementsByTagName('style');
+    i = 0;
+    while (inline = inlines[i++]){
+      stylesheet = { text: inline.textContent }
+      stylesheets.push(stylesheet);
     }
   }
   return this._stylesheets = stylesheets

@@ -1,0 +1,86 @@
+#!/usr/bin/env node
+
+var argv = require('minimist')(process.argv.slice(2));
+var fs = require('fs');
+var path = require('path');
+var postcss = require('postcss');
+var Promise = require('bluebird');
+var template = require('lodash/string/template');
+var through = require('through2');
+var UglifyJS = require('uglify-js');
+
+
+// Return a promise form fs.readFile instead accepting a callback.
+var readFile = Promise.promisify(fs.readFile);
+
+
+// Show the help message if help is specified.
+if (argv.h || argv.help) {
+  fs.createReadStream(path.join(__dirname, 'usage.txt')).pipe(process.stdout);
+}
+
+var sourceFile = argv.s || argv.source;
+var source = sourceFile ? fs.createReadStream(sourceFile) : process.stdin;
+
+var outputFile = argv.o || argv.output;
+var output = outputFile ? fs.createWriteStream(outputFile) : process.stdout;
+
+
+source.pipe(convertSourceStreamToOutputStream()).pipe(output);
+
+
+function convertSourceStreamToOutputStream() {
+  var buffer;
+  return through(
+    function(chunk, enc, cb) {
+      buffer = !buffer ? chunk : Buffer.concat([buffer, chunk]);
+      cb()
+    },
+    function(cb) {
+      var json = postcss.parse(buffer).toJSON();
+      var ast = JSON.stringify(filterNodes(json));
+      Promise.all([
+        readFile(path.join(__dirname, '../src/template.jst')),
+        readFile(path.join(__dirname, '../src/stringify.js'))
+      ])
+      .then(function(files) {
+        var output = template(files[0])({ast: ast, stringify: files[1]});
+        output = UglifyJS.minify(output, {fromString: true}).code;
+        this.push(new Buffer(output));
+        cb();
+      }.bind(this))
+    }
+  )
+}
+
+
+function filterNodes(node) {
+
+  var typePropertyMap = {
+    root: ['type'],
+    atrule: ['type', 'name', 'params'],
+    rule: ['type', 'selector'],
+    decl: ['type', 'prop', 'value', 'important']
+  };
+
+  // Ignore comment nodes.
+  if (node.type == 'comment') return;
+
+  var copy = {};
+
+  for (var prop of Object.keys(node)) {
+    if (typePropertyMap[node.type].indexOf(prop) > -1) {
+      copy[prop] = node[prop];
+    }
+  }
+
+  if (node.nodes) {
+    copy.nodes = [];
+    for (var i = 0; i < node.nodes.length; i++) {
+      var result = filterNodes(node.nodes[i]);
+      if (result) copy.nodes.push(result);
+    }
+  }
+
+  return copy;
+}

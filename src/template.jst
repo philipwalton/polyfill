@@ -1,0 +1,16 @@
+(function(window, document) {
+
+  var shimr = {
+    ast: <%= ast %>,
+    stringify: <%= stringify %>
+  };
+
+  var style = document.createElement('style');
+  var script = document.getElementById('shimr');
+
+  style.innerHTML = shimr.stringify(shimr.ast);
+  script.parentNode.insertBefore(style, script)
+
+  window.shimr = shimr;
+
+}(window, document))

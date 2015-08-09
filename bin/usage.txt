@@ -1,0 +1,13 @@
+
+  Usage: shimr [options]
+
+  Options:
+
+    -s, --source      The source CSS file to process.
+                      Defaults to stdin if not set.
+
+    -o, --outfile     The filename of the output file.
+                      Defaults to stdout if not set.
+
+    -h, --help        Displays this help message
+

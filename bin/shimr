@@ -4,14 +4,9 @@ var argv = require('minimist')(process.argv.slice(2));
 var fs = require('fs');
 var path = require('path');
 var postcss = require('postcss');
-var Promise = require('bluebird');
 var template = require('lodash/string/template');
 var through = require('through2');
 var UglifyJS = require('uglify-js');
-
-
-// Return a promise form fs.readFile instead accepting a callback.
-var readFile = Promise.promisify(fs.readFile);
 
 
 // Show the help message if help is specified.
@@ -26,7 +21,9 @@ var outputFile = argv.o || argv.output;
 var output = outputFile ? fs.createWriteStream(outputFile) : process.stdout;
 
 
-source.pipe(convertSourceStreamToOutputStream()).pipe(output);
+// Converts CSS into shimr output.
+source.pipe(convertSourceStreamToOutputStream())
+      .pipe(output);
 
 
 function convertSourceStreamToOutputStream() {
@@ -38,23 +35,20 @@ function convertSourceStreamToOutputStream() {
     },
     function(cb) {
       var json = postcss.parse(buffer).toJSON();
-      var ast = JSON.stringify(filterNodes(json));
-      Promise.all([
-        readFile(path.join(__dirname, '../src/template.jst')),
-        readFile(path.join(__dirname, '../src/stringify.js'))
-      ])
-      .then(function(files) {
-        var output = template(files[0])({ast: ast, stringify: files[1]});
-        output = UglifyJS.minify(output, {fromString: true}).code;
+      var AST = JSON.stringify(removeUnusedNodeProperties(json));
+      var shimrFilepath = path.join(__dirname, '../src/shimr.js');
+
+      fs.readFile(shimrFilepath, function(err, script) {
+        var output = prepareJavaScriptOutput(AST, script);
         this.push(new Buffer(output));
         cb();
-      }.bind(this))
+      }.bind(this));
     }
   )
 }
 
 
-function filterNodes(node) {
+function removeUnusedNodeProperties(node) {
 
   var typePropertyMap = {
     root: ['type'],
@@ -77,10 +71,20 @@ function filterNodes(node) {
   if (node.nodes) {
     copy.nodes = [];
     for (var i = 0; i < node.nodes.length; i++) {
-      var result = filterNodes(node.nodes[i]);
+      var result = removeUnusedNodeProperties(node.nodes[i]);
       if (result) copy.nodes.push(result);
     }
   }
 
   return copy;
 }
+
+
+function prepareJavaScriptOutput(AST, script) {
+  var intro = '!function(window, document){';
+  var entry = 'var AST = ' + AST + ';' + script;
+  var outro = '}(window, document);';
+
+  return UglifyJS.minify(intro + entry + outro, {fromString: true}).code;
+}
+

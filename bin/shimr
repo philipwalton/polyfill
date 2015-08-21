@@ -3,11 +3,7 @@
 var argv = require('minimist')(process.argv.slice(2));
 var fs = require('fs');
 var path = require('path');
-var postcss = require('postcss');
-var template = require('lodash/string/template');
-var through = require('through2');
-var UglifyJS = require('uglify-js');
-
+var shimr = require('..');
 
 // Show the help message if help is specified.
 if (argv.h || argv.help) {
@@ -20,71 +16,4 @@ var source = sourceFile ? fs.createReadStream(sourceFile) : process.stdin;
 var outputFile = argv.o || argv.output;
 var output = outputFile ? fs.createWriteStream(outputFile) : process.stdout;
 
-
-// Converts CSS into shimr output.
-source.pipe(convertSourceStreamToOutputStream())
-      .pipe(output);
-
-
-function convertSourceStreamToOutputStream() {
-  var buffer;
-  return through(
-    function(chunk, enc, cb) {
-      buffer = !buffer ? chunk : Buffer.concat([buffer, chunk]);
-      cb()
-    },
-    function(cb) {
-      var json = postcss.parse(buffer).toJSON();
-      var AST = JSON.stringify(removeUnusedNodeProperties(json));
-      var shimrFilepath = path.join(__dirname, '../src/shimr.js');
-
-      fs.readFile(shimrFilepath, function(err, script) {
-        var output = prepareJavaScriptOutput(AST, script);
-        this.push(new Buffer(output));
-        cb();
-      }.bind(this));
-    }
-  )
-}
-
-
-function removeUnusedNodeProperties(node) {
-
-  var typePropertyMap = {
-    root: ['type'],
-    atrule: ['type', 'name', 'params'],
-    rule: ['type', 'selector'],
-    decl: ['type', 'prop', 'value', 'important']
-  };
-
-  // Ignore comment nodes.
-  if (node.type == 'comment') return;
-
-  var copy = {};
-
-  for (var prop of Object.keys(node)) {
-    if (typePropertyMap[node.type].indexOf(prop) > -1) {
-      copy[prop] = node[prop];
-    }
-  }
-
-  if (node.nodes) {
-    copy.nodes = [];
-    for (var i = 0; i < node.nodes.length; i++) {
-      var result = removeUnusedNodeProperties(node.nodes[i]);
-      if (result) copy.nodes.push(result);
-    }
-  }
-
-  return copy;
-}
-
-
-function prepareJavaScriptOutput(AST, script) {
-  var intro = '!function(window, document){';
-  var entry = 'var AST = ' + AST + ';' + script;
-  var outro = '}(window, document);';
-
-  return UglifyJS.minify(intro + entry + outro, {fromString: true}).code;
-}
-
+shimr(source).pipe(output);

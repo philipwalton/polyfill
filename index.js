@@ -15,12 +15,12 @@ var UglifyJS = require('uglify-js');
  * @returns {Stream} A writeable stream.
  */
 module.exports = function(source, options) {
-  var files = [
-    fs.createReadStream(path.resolve(__dirname, 'src/shimr.js')),
-    source.pipe(shimrify())
-  ];
+  var plugins = [ /* plugin files get passed in here */ ];
+  var files = ['src/shimr.js']
+      .concat(plugins)
+      .concat([source.pipe(shimrify())]);
+
   return browserify(files)
-      .transform(babelify)
       .bundle()
       .pipe(uglify())
 }
@@ -41,7 +41,7 @@ function shimrify() {
     function(cb) {
       var json = postcss.parse(buffer).toJSON();
       var AST = JSON.stringify(removeUnusedNodeProperties(json), null, 2);
-      var code = 'window.shimr.addSource(' + AST + ')';
+      var code = 'window.shimr.shim(' + AST + ')';
       this.push(new Buffer(code));
       cb();
     }

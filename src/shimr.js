@@ -1,68 +1,64 @@
-/**
- * @fileoverview
- * This file defines the base shimr object and is responsible for converting
- * the included style AST into CSS and adding it to the DOM.
- * Note, the `AST` variable referenced in this file gets added at build time.
- */
-
-
-/* global AST */
+var StyleTree = require('./style-tree');
 
 
 /**
- * References `document.currentScript` (if available)
- * or gets the last script tag in the document.
- * Note: this only works with synchronous scripts.
+ * The list of plugins to use.
  */
-var currentScript = document.currentScript || (function() {
-  var scripts = document.getElementsByTagName('script');
-  return scripts[scripts.length - 1];
-}());
+var plugins = [];
+
+
+// Export the global shimr object.
+window.shimr = {
+
+  /**
+   * Registers a Shimr plugin for use.
+   * @param {Object} plugin The plugin object
+   */
+  plugin: function(plugin) {
+    plugins.push(plugin);
+  },
+
+  /**
+   * Accepts a CSS object, applies/initializes any registered plugins, and
+   * inserts a new <style> tag on the page with the resulting CSS.
+   * @param {Object} css A JSON representation of the CSS abstract syntax tree.
+   * @param {Object} options (**not currently used**)
+   * @return {Object} the `shimr` singleton.
+   */
+  shim: function(css, options) {
+    var styleTag = document.createElement('style');
+    var scriptTag = getCurrentScript();
+
+    var styles = new StyleTree(css);
+    applyPlugins(styles);
+
+    styleTag.innerHTML = styles.toCSS();
+    scriptTag.parentNode.insertBefore(styleTag, scriptTag);
+  }
+};
 
 
 /**
- * Converts a shimr AST node into CSS.
- * @param node A shimr AST node.
- * @return string The CSS content.
+ * Invokes each plugin, in order, and returns the transformed AST.
+ * @return {Object}
  */
-function stringify(node) {
-  var str = '';
-
-  // Stringify pre-child nodes.
-  if (node.type == 'atrule') {
-    str += '@' + node.name + ' ' + node.params + '{';
+function applyPlugins(styles) {
+  for (var i = 0, plugin; plugin = plugins[i]; i++) {
+    plugin.transform(styles);
   }
-  else if (node.type == 'rule') {
-    str += node.selector + '{';
-  }
-  else if (node.type == 'decl') {
-    str += node.prop + ':' + node.value +
-        (node.important ? '!important' : '') + ';';
-  }
-
-  // Stringify child nodes.
-  if (node.nodes) {
-    str += node.nodes.map(stringify).join('');
-  }
-
-  // Stringify post-child nodes.
-  if (node.type == 'atrule' || node.type == 'rule') {
-    str += '}';
-  }
-
-  return str;
+  return styles;
 }
 
 
-// Creates a style node and interts it into the DOM
-// immediately before the current shimr script.
-var style = document.createElement('style');
-style.innerHTML = stringify(AST);
-currentScript.parentNode.insertBefore(style, currentScript);
-
-
-// Exposes the global object.
-window.shimr = {
-  AST: AST,
-  stringify: stringify
-};
+/**
+ * Returns `document.currentScript` (if available)
+ * or gets the last script tag in the document.
+ * Note: this only works with synchronous scripts.
+ * @return {HTMLElement}
+ */
+function getCurrentScript() {
+  return document.currentScript || (function() {
+    var scripts = document.getElementsByTagName('script');
+    return scripts[scripts.length - 1];
+  }());
+}

@@ -1,9 +1,5 @@
-var babelify = require('babelify');
 var browserify = require('browserify');
-var fs = require('fs');
-var path = require('path');
 var postcss = require('postcss');
-var stream = require('stream');
 var through = require('through2');
 var UglifyJS = require('uglify-js');
 

@@ -57,7 +57,7 @@ function walkNodes(node, type, callback) {
       callback(child);
     }
     else {
-      walkNodes(child);
+      walkNodes(child, type, callback);
     }
   }
 }

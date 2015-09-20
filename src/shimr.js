@@ -1,4 +1,4 @@
-var StyleTree = require('./style-tree');
+var Node = require('./node');
 
 
 /**
@@ -29,12 +29,32 @@ window.shimr = {
     var styleTag = document.createElement('style');
     var scriptTag = getCurrentScript();
 
-    var styles = new StyleTree(css);
+    var styles = new Node(css);
     applyPlugins(styles);
 
     styleTag.innerHTML = styles.toCSS();
     scriptTag.parentNode.insertBefore(styleTag, scriptTag);
-  }
+  },
+
+  ready: (function() {
+    var domLoaded = false;
+    document.addEventListener('DOMContentLoaded', function fn() {
+      domLoaded = true;
+      document.removeEventListener('DOMContentLoaded', fn);
+    });
+    return function(cb) {
+      if (domLoaded) {
+        cb();
+      }
+      else {
+        document.addEventListener('DOMContentLoaded', function fn() {
+          document.removeEventListener('DOMContentLoaded', fn);
+          cb();
+        });
+      }
+    }
+  }())
+
 };
 
 

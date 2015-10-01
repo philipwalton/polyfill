@@ -5,15 +5,17 @@ var fs = require('fs');
 var path = require('path');
 var shimr = require('..');
 
-// Show the help message if help is specified.
+// Shows the help message if help is specified.
 if (argv.h || argv.help) {
   fs.createReadStream(path.join(__dirname, 'usage.txt')).pipe(process.stdout);
 }
+// Otherwise runs the main program.
+else {
+  var sourceFile = argv.s || argv.source;
+  var source = sourceFile ? fs.createReadStream(sourceFile) : process.stdin;
 
-var sourceFile = argv.s || argv.source;
-var source = sourceFile ? fs.createReadStream(sourceFile) : process.stdin;
+  var outputFile = argv.o || argv.output;
+  var output = outputFile ? fs.createWriteStream(outputFile) : process.stdout;
 
-var outputFile = argv.o || argv.output;
-var output = outputFile ? fs.createWriteStream(outputFile) : process.stdout;
-
-shimr(source).pipe(output);
+  shimr(source).pipe(output);
+}

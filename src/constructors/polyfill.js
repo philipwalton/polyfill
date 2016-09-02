@@ -21,6 +21,7 @@ function Polyfill(options) {
   this._buildMediaQueryMap()
   this._reportInitialMatches()
   this._addMediaListeners()
+  this._addMutationObserver()
 }
 
 
@@ -71,6 +72,9 @@ Polyfill.prototype.getCurrentMatches = function() {
  */
 Polyfill.prototype.destroy = function() {
   if (this._undoUnmatched) {
+    if (typeof this.mutationObserver != 'undefined') {
+      this.mutationObserver.disconnect()
+    }
     this._undoUnmatched(this.getCurrentMatches())
     EventManager.removeListeners(this)
   }
@@ -288,6 +292,53 @@ Polyfill.prototype._addMediaListeners = function() {
           unmatches.length && this._undoUnmatched(new Ruleset(unmatches))
         }
       )
+    }
+  )
+}
+
+Polyfill.prototype._addMutationObserver = function() {
+  this._defer(
+    function() {
+      if (typeof MutationObserver === 'undefined') { return false }
+      return this._filteredRules && this._doMatched
+    },
+    function() {
+      var instance = this
+        , rule
+        , selector
+        , selectors = []
+        , i = 0
+        , j = 0
+
+      while (rule = this._filteredRules[i++]) {
+        while (selector = rule.selectors[j++]) {
+          selectors.push(selector)
+        }
+      }
+
+      this.mutationObserver = new MutationObserver(function(mutations, observer) {
+        var addedNode
+          , mutation
+          , k = 0
+          , l = 0
+          , m = 0
+        while (mutation = mutations[k++]) {
+          if (mutation.type != 'childList') { continue }
+          while (selector = selectors[l++]) {
+            while (addedNode = mutation.addedNodes[m++]) {
+              if (addedNode.nodeType != Node.ELEMENT_NODE) { continue }
+              if (addedNode.querySelector(selector)) {
+                instance._doMatched(instance.getCurrentMatches())
+                return
+              }
+            }
+            m = 0
+          }
+          l = 0
+        }
+      })
+
+      this.mutationObserver.observe(document, { childList: true, subtree: true })
     }
   )
 }

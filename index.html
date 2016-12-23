@@ -8,14 +8,6 @@
   <!--[if lt IE 9]>
   <script src="lib/html5shiv.js"></script>
   <![endif]-->
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-40829935-1', 'github.io');
-    ga('send', 'pageview');
-  </script>
 </head>
 <body>
 
@@ -28,10 +20,18 @@
     </div>
   </header>
 
+  <section style="background-color: #ffc; margin-top:0; padding: 2em 0">
+    <div class="container">
+      <p class="promo">
+        <strong>Update (2016-12-22):</strong> I am no longer supporting this library for all the reasons I address in my post The <a href="https://philipwalton.com/articles/the-dark-side-of-polyfilling-css/">Dark Side of Polyfilling CSS</a>. If you choose to use this library, please make sure you read the post, so you fully understand the challenges and limitations involved in writing CSS polyfills.
+      </p>
+    </div>
+  </section>
+
   <section>
     <div class="container">
       <h1>Introduction</h1>
-      <p class="promo">Polyfill.js is a library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.</p>
+      <p>Polyfill.js is a library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.</p>
       <p>For most CSS polyfills, the hardest part is not the polyfill logic itself, it's the boring stuff, the stuff that the browser is supposed to do for you: downloading the CSS, parsing it, and finding the parts you care about. If the CSS contains media queries, you need to deal with them, detect when they apply, and manually listen for changes.</p>
 
       <p>Furthermore, on the Web today, most polyfills exist isolated from each other, which means they all repeat the same expensive tasks. Polyfill.js solves this problem. It provides a common API for Polyfill authors to hook in to, so all the hard work happens only once at most. The stylesheets are downloaded, parsed, and stored in a cache so additional requests don't do double work.</p>

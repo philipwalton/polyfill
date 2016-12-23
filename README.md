@@ -1,3 +1,7 @@
+**UPDATE (2016-12-22): I am no longer supporting this library for all the reasons I address in my post [The Dark Side of Polyfilling CSS](https://philipwalton.com/articles/the-dark-side-of-polyfilling-css/). If you choose to use this library, please make sure you read the post, so you fully understand the challenges and limitations involved in writing CSS polyfills.**
+
+* * *
+
 # Polyfill.js
 
 Polyfill.js is a library designed to make writing CSS polyfills much, much easier. It's an abstraction library that takes care of the boilerplate, so you can focus on what your polyfill actually does.
